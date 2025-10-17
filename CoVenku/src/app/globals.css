@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000; 
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+  }
+}
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  background-color: #ffffff !important;
+  color: #000000 !important;         
+}
+nav a {
+  color: #000000 !important;
+}
+nav button svg {
+  color: #000000 !important;
+}
+.page-section {
+  width: 100%;
+  min-height: calc(100vh - 4rem);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  color: #000;
+  border-bottom: 1px solid #e0e0e0;
+}
+.page-section h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.page-section p {
+  font-size: 1rem;
+  max-width: 600px;
+  text-align: center;
+}
