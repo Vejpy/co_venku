@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 type StoredUser = {
   username: string;
   password: string;
+};
+
+type PendingRequest = {
+  sender: string;
+  id: number;
 };
 
 export default function Account() {
@@ -18,6 +23,11 @@ export default function Account() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  // Friend system states
+  const [friendUsername, setFriendUsername] = useState("");
+  const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
+  const [friends, setFriends] = useState<string[]>([]);
+
   useEffect(() => {
     const storedUser = sessionStorage.getItem("loggedUser");
     if (storedUser) {
@@ -26,6 +36,24 @@ export default function Account() {
       router.push("/Login_Register");
     }
   }, [router]);
+
+  const fetchFriendsAndRequests = useCallback(async () => {
+    try {
+      const res = await fetch("/api/friends/list", {
+        method: "POST",
+        body: JSON.stringify({ username: user?.username }),
+      });
+      const data = await res.json();
+      setPendingRequests(data.pendingRequests || []);
+      setFriends(data.friends || []);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [user?.username]);
+
+  useEffect(() => {
+    if (user) fetchFriendsAndRequests();
+  }, [user, fetchFriendsAndRequests]);
 
   const handlePasswordChange = () => {
     if (!newPassword || !confirmPassword) {
@@ -42,7 +70,6 @@ export default function Account() {
       setUser(updatedUser);
       sessionStorage.setItem("loggedUser", JSON.stringify(updatedUser));
 
-      // Update localStorage record if exists
       const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
       const updatedUsers = storedUsers.map((u: StoredUser) =>
         u.username === user.username ? updatedUser : u
@@ -59,6 +86,44 @@ export default function Account() {
   const handleLogout = () => {
     sessionStorage.removeItem("loggedUser");
     router.push("/Login_Register");
+  };
+
+  const sendFriendRequest = async () => {
+    if (!friendUsername) return;
+    try {
+      await fetch("/api/friends/send-request", {
+        method: "POST",
+        body: JSON.stringify({ senderUsername: user?.username, receiverUsername: friendUsername }),
+      });
+      setFriendUsername("");
+      fetchFriendsAndRequests();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const acceptRequest = async (sender: string) => {
+    try {
+      await fetch("/api/friends/accept-request", {
+        method: "POST",
+        body: JSON.stringify({ senderUsername: sender, receiverUsername: user?.username }),
+      });
+      fetchFriendsAndRequests();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const declineRequest = async (sender: string) => {
+    try {
+      await fetch("/api/friends/decline-request", {
+        method: "POST",
+        body: JSON.stringify({ senderUsername: sender, receiverUsername: user?.username }),
+      });
+      fetchFriendsAndRequests();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (!user) return null;
@@ -133,6 +198,61 @@ export default function Account() {
           {message && (
             <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">{message}</p>
           )}
+        </div>
+
+        {/* Friend System Section */}
+        <div className="w-full bg-gray-50 dark:bg-neutral-900 rounded-lg p-6 shadow-md mt-6">
+          <h2 className="text-xl font-semibold mb-2">Friends</h2>
+          <div className="flex gap-2 mb-4">
+            <input
+              value={friendUsername}
+              onChange={(e) => setFriendUsername(e.target.value)}
+              placeholder="Enter username"
+              className="border p-2 rounded flex-1 bg-white dark:bg-neutral-800 text-black dark:text-white"
+            />
+            <button
+              onClick={sendFriendRequest}
+              className="bg-blue-500 text-white px-4 rounded hover:opacity-80 transition"
+            >
+              Send Request
+            </button>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-1">Pending Requests</h3>
+            {pendingRequests.length ? (
+              pendingRequests.map((r) => (
+                <div key={r.sender} className="flex justify-between items-center p-2 border-b">
+                  <span>{r.sender}</span>
+                  <div>
+                    <button
+                      onClick={() => acceptRequest(r.sender)}
+                      className="bg-green-500 text-white px-2 rounded mr-2"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => declineRequest(r.sender)}
+                      className="bg-red-500 text-white px-2 rounded"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No pending requests</p>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <h3 className="font-semibold mb-1">Friends List</h3>
+            {friends.length ? (
+              friends.map((f) => <p key={f}>{f}</p>)
+            ) : (
+              <p className="text-gray-500">No friends yet</p>
+            )}
+          </div>
         </div>
 
         <button
