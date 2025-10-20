@@ -27,6 +27,7 @@ export default function Account() {
   const [friendUsername, setFriendUsername] = useState("");
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
   const [friends, setFriends] = useState<string[]>([]);
+  const [requestMessage, setRequestMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("loggedUser");
@@ -38,10 +39,11 @@ export default function Account() {
   }, [router]);
 
   const fetchFriendsAndRequests = useCallback(async () => {
+    if (!user) return;
     try {
       const res = await fetch("/api/friends/list", {
         method: "POST",
-        body: JSON.stringify({ username: user?.username }),
+        body: JSON.stringify({ username: user.username }),
       });
       const data = await res.json();
       setPendingRequests(data.pendingRequests || []);
@@ -49,11 +51,11 @@ export default function Account() {
     } catch (err) {
       console.error(err);
     }
-  }, [user?.username]);
+  }, [user]);
 
   useEffect(() => {
-    if (user) fetchFriendsAndRequests();
-  }, [user, fetchFriendsAndRequests]);
+    fetchFriendsAndRequests();
+  }, [fetchFriendsAndRequests]);
 
   const handlePasswordChange = () => {
     if (!newPassword || !confirmPassword) {
@@ -89,16 +91,27 @@ export default function Account() {
   };
 
   const sendFriendRequest = async () => {
-    if (!friendUsername) return;
+    if (!friendUsername || !user) return;
     try {
-      await fetch("/api/friends/send-request", {
+      const res = await fetch("/api/friends/send-request", {
         method: "POST",
-        body: JSON.stringify({ senderUsername: user?.username, receiverUsername: friendUsername }),
+        body: JSON.stringify({ senderUsername: user.username, receiverUsername: friendUsername }),
       });
+      const data = await res.json();
+      if (data.message) {
+        setRequestMessage({ text: data.message, type: "success" });
+      } else if (data.error) {
+        setRequestMessage({ text: data.error, type: "error" });
+      }
       setFriendUsername("");
       fetchFriendsAndRequests();
+      // Clear message after 3 seconds
+      setTimeout(() => setRequestMessage(null), 3000);
     } catch (err) {
+      setRequestMessage({ text: "Network error", type: "error" });
       console.error(err);
+      // Clear message after 3 seconds
+      setTimeout(() => setRequestMessage(null), 3000);
     }
   };
 
@@ -203,7 +216,7 @@ export default function Account() {
         {/* Friend System Section */}
         <div className="w-full bg-gray-50 dark:bg-neutral-900 rounded-lg p-6 shadow-md mt-6">
           <h2 className="text-xl font-semibold mb-2">Friends</h2>
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-2">
             <input
               value={friendUsername}
               onChange={(e) => setFriendUsername(e.target.value)}
@@ -217,6 +230,17 @@ export default function Account() {
               Send Request
             </button>
           </div>
+
+          {/* Visual feedback for friend request */}
+          {requestMessage && (
+            <p
+              className={`mb-2 text-sm ${
+                requestMessage.type === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {requestMessage.text}
+            </p>
+          )}
 
           <div>
             <h3 className="font-semibold mb-1">Pending Requests</h3>
