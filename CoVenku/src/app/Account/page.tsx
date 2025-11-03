@@ -144,7 +144,7 @@ export default function Account() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-black text-black dark:text-white p-8">
       <main className="flex flex-col items-center gap-8 w-full max-w-md">
-        <h1 className="text-3xl font-semibold tracking-tight">Account</h1>
+        <h1 className="text-3xl font-semibold pt-15 tracking-tight">Account</h1>
 
         <div className="w-full bg-gray-100 dark:bg-neutral-900 rounded-lg p-6 shadow-md">
           <p className="mb-2">
