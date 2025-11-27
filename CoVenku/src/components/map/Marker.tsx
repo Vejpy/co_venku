@@ -2,7 +2,9 @@
 
 import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
+import ReactDOMServer from 'react-dom/server';
 import  PlaceCard  from '../place/PlaceCard';
+import CustomSVGMarker from './CustomSVGMarker';
  
 type MarkerItemProps = {
   position: LatLngExpression;
@@ -11,6 +13,8 @@ type MarkerItemProps = {
     name: string;
     // visitors: number;
     description?: string;
+    type: 'culture' | 'concert' | 'sport' | 'food';
+    number?: number;
   };
 };
 
@@ -25,11 +29,14 @@ export default function MarkerItem({ position, place }: MarkerItemProps) {
     );
   }
 
-  const customIcon = L.icon({
-    iconUrl: '/marker.png', 
-    iconSize: [64, 64],     
-    iconAnchor: [16, 32],   
-    popupAnchor: [0, -32], 
+  const customIcon = L.divIcon({
+    className: '',
+    html: ReactDOMServer.renderToStaticMarkup(
+      <CustomSVGMarker type={place.type} number={place.number} />
+    ),
+    iconSize: [64, 64],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
   });
 
   return (

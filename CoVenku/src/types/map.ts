@@ -7,4 +7,6 @@ export interface MarkerData {
   title?: string;
   description?: string;
   imageUrl?: string;
+  type: 'culture' | 'concert' | 'sport' | 'food';
+  number?: number;
 }
