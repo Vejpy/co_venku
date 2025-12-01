@@ -32,7 +32,7 @@ export default function Navbar() {
   const accountHref = isLoggedIn ? '/Account' : '/Login_Register';
 
   return (
-    <nav className="bg-white shadow-md fixed w-full z-50" style={{ paddingTop: `calc(env(safe-area-inset-top, 0) + ${isWebView ? '50px' : '0px'})` }}>
+    <nav className="bg-white shadow-md fixed w-full z-50" style={{ paddingTop: `calc(env(safe-area-inset-top, 0) + ${isWebView ? '0px' : '0px'})` }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between min-h-16">
 
