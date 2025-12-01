@@ -29,7 +29,7 @@ export default function HomePage() {
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] pt-16">
-      <div style={{ backgroundColor: 'white', width: '100%', height: isWebView ? 60 : 0 }} />
+      <div style={{ backgroundColor: 'white', width: '100%', height: isWebView ? 0 : 0 }} />
       <MapContainer markersData={markers}/>
     </div>
   );
