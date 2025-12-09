@@ -1,26 +1,24 @@
-// src/utils/mapData.ts
-// import { LatLngExpression } from 'leaflet';
-import { MarkerData } from '../types/map';
+import { MarkerData, CulturePlaceResponse, CulturePlace } from '../types/map';
 
-export const markers: MarkerData[] = [
-  { id: 1, position: [50.08804, 14.42076], title: 'Prague Castle', description: 'Historic castle complex', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'culture', number: 1 },
-  { id: 2, position: [50.087, 14.421], title: 'Charles Bridge', description: 'Famous bridge over Vltava river', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'concert', number: 2 },
-  { id: 3, position: [50.086, 14.423], title: 'Old Town Square', description: 'Central square with Astronomical Clock', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'sport', number: 3 },
-  { id: 4, position: [49.1951, 16.6068], title: 'Brno Cathedral', description: 'Cathedral of St. Peter and Paul', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'food', number: 4 },
-  { id: 5, position: [50.0755, 15.4383], title: 'Hradec Králové', description: 'Historic city with beautiful architecture', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'culture', number: 5 },
-  { id: 6, position: [49.8175, 18.2625], title: 'Ostrava City Hall', description: 'Modernist city hall building', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'concert', number: 6 },
-  { id: 7, position: [50.4542, 14.1536], title: 'České Budějovice', description: 'Known for Budweiser beer and historic square', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'sport', number: 7 },
-  { id: 8, position: [50.6403, 13.8242], title: 'Ústí nad Labem', description: 'Industrial city on the Elbe river', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'food', number: 8 },
-  { id: 9, position: [49.7415, 13.3736], title: 'Plzeň', description: 'Birthplace of Pilsner beer', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'culture', number: 9 },
-  { id: 10, position: [50.1039, 14.4114], title: 'Vyšehrad', description: 'Historic fort overlooking Prague', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'concert', number: 10 },
-  { id: 11, position: [49.195, 16.608], title: 'Špilberk Castle', description: 'Castle and fortress in Brno', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'sport', number: 11 },
-  { id: 12, position: [50.226, 12.871], title: 'Karlovy Vary', description: 'Famous spa town with hot springs', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'food', number: 12 },
-  { id: 13, position: [50.225, 14.390], title: 'Kutná Hora', description: 'Historic town with Sedlec Ossuary', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'culture', number: 13 },
-  { id: 14, position: [49.941, 14.492], title: 'Jihlava', description: 'One of the oldest mining towns in Czech Republic', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'concert', number: 14 },
-  { id: 15, position: [50.770, 15.054], title: 'Liberec', description: 'City with Ještěd Tower and ski resort', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'sport', number: 15 },
-  { id: 16, position: [48.974, 14.474], title: 'Český Krumlov', description: 'UNESCO town with a medieval castle', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'food', number: 16 },
-  { id: 17, position: [50.033, 14.474], title: 'Terezín', description: 'Historic fortress and WWII memorial', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'culture', number: 17 },
-  { id: 18, position: [49.903, 15.474], title: 'Pardubice', description: 'Known for horse racing and gingerbread', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'concert', number: 18 },
-  { id: 19, position: [50.433, 14.041], title: 'Mělník', description: 'Town famous for wine production', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'sport', number: 19 },
-  { id: 20, position: [50.080, 14.430], title: 'National Museum Prague', description: 'Largest museum in the Czech Republic', imageUrl: 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw5bfx2uMQmiO71DQy0KOZlgh6OboWbsttg2G9ENGnPcQg_95JU3AQa6P3z6jm7r9BYMugIW442tMM97geciLijGNa_udxQKBN3acImRGBfLdcI6zsojkauhNBsOPXKoGMKqQ0Yd0fxVt2c=s1360-w1360-h1020', type: 'food', number: 20 },
-];
+// Fetches markers from the backend API and converts them into MarkerData
+export async function fetchMarkers(): Promise<MarkerData[]> {
+  console.log('Fetching markers from API...');
+  const response = await fetch('http://172.26.10.213:7247/api/CulturePlace/All');
+  const data: CulturePlaceResponse = await response.json();
+  console.log('Raw API data:', data);
+
+  // Map API data to MarkerData
+  return data.data.map((place: CulturePlace) => {
+    const mappedMarker: MarkerData = {
+      id: place.id,
+      title: place.name,
+      description: place.description,
+      imageUrl: place.else ? JSON.parse(place.else).Image : undefined,
+      type: place.type,
+      number: place.id,
+      position: [Number(place.address.lat), Number(place.address.lon)],
+    };
+    console.log('Mapped marker:', mappedMarker);
+    return mappedMarker;
+  });
+}

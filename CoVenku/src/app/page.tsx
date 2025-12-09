@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { MarkerData } from '@/types/map';
-import { markers } from '@/utils/mapData';
 
 
 
@@ -15,7 +14,7 @@ export default function HomePage() {
   return (
     <div className="w-full h-[calc(100vh-4rem)] pt-16">
       <h1>idk</h1>
-      <MapContainer markersData={markers}/>
+      <MapContainer markersData={[]}/>
     </div>
   );
 }

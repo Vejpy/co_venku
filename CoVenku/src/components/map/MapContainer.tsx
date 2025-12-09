@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { MapContainer as LeafletMapContainer, TileLayer, useMap } from 'react-leaflet';
-import { LatLngExpression} from 'leaflet';
-import MarkerItem from './Marker';
+import React, { useEffect, useState } from 'react';
+import { MapContainer as LeafletMapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import SearchBar from './SearchBar';
-import { markers } from '../../utils/mapData';
 import { MarkerData } from '../../types/map';
-import getAllPlaces from '@/services/api';
-
+import { fetchMarkers } from '../../utils/mapData';
 
 interface MapContainerProps {
   markersData?: MarkerData[];
@@ -18,16 +15,27 @@ function hasTitle(marker: MarkerData): marker is MarkerData & { title: string } 
   return typeof marker.title === 'string' && marker.title.length > 0;
 }
 
-export default function MapContainer({ markersData}: MapContainerProps) {
-  const center = [50.08804, 14.42076] as [number, number];
-  let data;
-  useEffect(() => {
-    data = getAllPlaces();
-    console.log('Fetched Places:', data);
-  }, []);
-  const dataSource = markersData ?? markers;
-  console.log('Markers Data:', markersData);
+export default function MapContainer({ markersData }: MapContainerProps) {
+  const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
 
+  useEffect(() => {
+    async function loadMarkers() {
+      try {
+        console.log('Fetching markers inside MapContainer...');
+        const data = await fetchMarkers();
+        console.log('Markers fetched:', data);
+        setMarkersDataState(data);
+      } catch (err) {
+        console.error('Failed to fetch markers:', err);
+      }
+    }
+    loadMarkers();
+  }, []);
+
+  const dataSource =  markersDataState;
+
+  const firstMarker = markersDataState[0]?.position;
+  const defaultCenter: LatLngExpression = [50.08804, 14.42076];
 
   const MapController: React.FC = () => {
     const map = useMap();
@@ -36,39 +44,57 @@ export default function MapContainer({ markersData}: MapContainerProps) {
       map.flyTo(coords, 15, { duration: 3 });
     };
 
-    return <SearchBar markers={markers.filter(hasTitle)} onSelect={handleSearchSelect} />;
+    return <SearchBar markers={dataSource.filter(hasTitle)} onSelect={handleSearchSelect} />;
   };
 
+  if (!firstMarker) {
+    return <div>Loading map...</div>;
+  }
+
   return (
-    <div className={`w-full h-[calc(90vh-4rem)] relative`}>
-      <LeafletMapContainer center={center} zoom={13} preferCanvas={true} style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '90vh', position: 'relative' }}>
+      <LeafletMapContainer center={firstMarker || defaultCenter} zoom={13} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           maxZoom={19}
-          keepBuffer={60}            
-          updateWhenIdle={true}  
         />
 
-        {React.useMemo(() => dataSource.map((marker) => {
-          const imageUrl = marker.imageUrl ?? '/images/default-place.jpg';
+        {dataSource.map((marker) => {
+          const typeMapping: Record<string, 'culture' | 'concert' | 'sport' | 'food'> = {
+            divadlo: 'culture',
+            koncert: 'concert',
+            sport: 'sport',
+            restaurace: 'food',
+            kino: 'culture',
+          };
           const name = marker.title ?? 'Unknown place';
           const description = marker.description ?? '';
-          const type = marker.type ?? 'culture'; // Default to 'culture' if type is missing
+          const type = typeMapping[marker.type] ?? 'culture';
 
+          console.log('Rendering marker at position:', marker.position);
+
+          const [lat, lng] = marker.position as [number, number];
           return (
-            <MarkerItem
+            <Marker
               key={marker.id}
-              position={marker.position}
-              place={{
-                imageUrl,
-                name,
-                description,
-                type,
-              }}
-            />
+              position={[lat, lng]}
+              icon={L.divIcon({
+                html: `<div style="width:20px;height:20px;background:red;border-radius:50%;"></div>`,
+                className: '',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+              })}
+            >
+              <Popup>
+                <h3>{name}</h3>
+                <p>{description}</p>
+                
+                <p>Type: {marker.type}</p>
+              </Popup>
+            </Marker>
           );
-        }), [dataSource])}
+        })}
 
         <MapController />
       </LeafletMapContainer>
