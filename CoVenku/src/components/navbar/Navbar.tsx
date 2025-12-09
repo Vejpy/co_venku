@@ -7,32 +7,18 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isWebView, setIsWebView] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem('loggedUser');
     setIsLoggedIn(!!storedUser);
-
-    // Detect if running inside a WebView
-    const userAgent = navigator.userAgent || '';
-    const webViewIndicators = [
-      'WebView',
-      'wv',
-      'Android; Mobile',
-      'iPhone; CPU iPhone OS',
-      'iPad; CPU OS',
-      'Version/',
-    ];
-    const isInWebView = webViewIndicators.some(indicator => userAgent.includes(indicator)) && !userAgent.includes('Safari');
-    setIsWebView(isInWebView);
   }, []);
 
   const accountHref = isLoggedIn ? '/Account' : '/Login_Register';
 
   return (
-    <nav className="bg-white shadow-md fixed w-full z-50" style={{ paddingTop: `calc(env(safe-area-inset-top, 0) + ${isWebView ? '0px' : '0px'})` }}>
+    <nav>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between min-h-16">
 

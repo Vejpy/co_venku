@@ -11,7 +11,6 @@ type MarkerItemProps = {
   place: {
     imageUrl: string;
     name: string;
-    // visitors: number;
     description?: string;
     type: 'culture' | 'concert' | 'sport' | 'food';
     number?: number;

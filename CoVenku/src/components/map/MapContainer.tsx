@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, useMap } from 'react-leaflet';
 import { LatLngExpression} from 'leaflet';
 import MarkerItem from './Marker';
 import SearchBar from './SearchBar';
 import { markers } from '../../utils/mapData';
 import { MarkerData } from '../../types/map';
+import getAllPlaces from '@/services/api';
 
 
 interface MapContainerProps {
@@ -19,10 +20,14 @@ function hasTitle(marker: MarkerData): marker is MarkerData & { title: string } 
 
 export default function MapContainer({ markersData}: MapContainerProps) {
   const center = [50.08804, 14.42076] as [number, number];
+  let data;
+  useEffect(() => {
+    data = getAllPlaces();
+    console.log('Fetched Places:', data);
+  }, []);
   const dataSource = markersData ?? markers;
   console.log('Markers Data:', markersData);
 
-  const isWebView = typeof navigator !== 'undefined' && /WebView|wv/.test(navigator.userAgent);
 
   const MapController: React.FC = () => {
     const map = useMap();
@@ -35,17 +40,14 @@ export default function MapContainer({ markersData}: MapContainerProps) {
   };
 
   return (
-    <div className={`w-full h-[calc(90vh-4rem)] relative${isWebView ? ' mt-[120px]' : ''}`}>
+    <div className={`w-full h-[calc(90vh-4rem)] relative`}>
       <LeafletMapContainer center={center} zoom={13} preferCanvas={true} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           maxZoom={19}
-    keepBuffer={10}            
-    updateWhenZooming={false}  // no tile unload mid-zoom
-    updateWhenIdle={true}  
-
-          
+          keepBuffer={60}            
+          updateWhenIdle={true}  
         />
 
         {React.useMemo(() => dataSource.map((marker) => {

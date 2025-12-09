@@ -1,4 +1,3 @@
-// src/components/Place/PlaceCardNav.tsx
 import React from "react";
 import Image from "next/image";
 
@@ -18,7 +17,6 @@ const PlaceCardNav: React.FC<PlaceCardNavProps> = ({ imageUrl, name, description
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{name}</h2>
         <p className="text-sm text-gray-600 mb-2">{description}</p>
-        {/* <p className="text-sm font-medium text-gray-800">Visitors: {visitors.toLocaleString()}</p> */}
       </div>
       <div className="p-4 border-t border-gray-200">
         <div className="w-full h-24 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-sm">
