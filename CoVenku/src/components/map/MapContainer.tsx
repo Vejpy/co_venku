@@ -1,41 +1,54 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { MapContainer as LeafletMapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
-import L, { LatLngExpression } from 'leaflet';
-import SearchBar from './SearchBar';
-import { MarkerData } from '../../types/map';
-import { fetchMarkers } from '../../utils/mapData';
+import React, { useEffect, useState } from "react";
+import SearchBar from "./SearchBar";
+import { MarkerData } from "../../types/map";
+import { fetchMarkers } from "../../utils/mapData";
+import dynamic from "next/dynamic";
+import { LatLngExpression } from "leaflet";
 
 interface MapContainerProps {
   markersData?: MarkerData[];
 }
 
-function hasTitle(marker: MarkerData): marker is MarkerData & { title: string } {
-  return typeof marker.title === 'string' && marker.title.length > 0;
-}
-
-export default function MapContainer({ markersData }: MapContainerProps) {
+function MapContainer({}: MapContainerProps) {
   const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
+  const [LeafletComponents, setLeafletComponents] = useState<{
+    L: typeof import("leaflet");
+    MapContainer: typeof import("react-leaflet").MapContainer;
+    TileLayer: typeof import("react-leaflet").TileLayer;
+    Marker: typeof import("react-leaflet").Marker;
+    Popup: typeof import("react-leaflet").Popup;
+    useMap: typeof import("react-leaflet").useMap;
+  } | null>(null);
+
+  useEffect(() => {
+    async function loadLeaflet() {
+      const L = await import("leaflet");
+      const { MapContainer, TileLayer, Marker, Popup, useMap } = await import("react-leaflet");
+      setLeafletComponents({ L, MapContainer, TileLayer, Marker, Popup, useMap });
+    }
+    loadLeaflet();
+  }, []);
 
   useEffect(() => {
     async function loadMarkers() {
       try {
-        console.log('Fetching markers inside MapContainer...');
         const data = await fetchMarkers();
-        console.log('Markers fetched:', data);
         setMarkersDataState(data);
       } catch (err) {
-        console.error('Failed to fetch markers:', err);
+        console.error("Failed to fetch markers:", err);
       }
     }
     loadMarkers();
   }, []);
 
-  const dataSource =  markersDataState;
+  if (!LeafletComponents) return <div>Loading map...</div>;
+  if (markersDataState.length === 0) return <div>Loading markers...</div>;
 
-  const firstMarker = markersDataState[0]?.position;
-  const defaultCenter: LatLngExpression = [50.08804, 14.42076];
+  const { L, MapContainer: LeafletMapContainer, TileLayer, Marker, Popup, useMap } = LeafletComponents;
+
+  const firstMarker = markersDataState[0]?.position ?? [50.08804, 14.42076];
 
   const MapController: React.FC = () => {
     const map = useMap();
@@ -44,36 +57,18 @@ export default function MapContainer({ markersData }: MapContainerProps) {
       map.flyTo(coords, 15, { duration: 3 });
     };
 
-    return <SearchBar markers={dataSource.filter(hasTitle)} onSelect={handleSearchSelect} />;
+    return <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />;
   };
 
-  if (!firstMarker) {
-    return <div>Loading map...</div>;
-  }
-
   return (
-    <div style={{ width: '100%', height: '90vh', position: 'relative' }}>
-      <LeafletMapContainer center={firstMarker || defaultCenter} zoom={13} style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: "100%", height: "90vh", position: "relative" }}>
+      <LeafletMapContainer center={firstMarker} zoom={13} style={{ width: "100%", height: "100%" }}>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           maxZoom={19}
         />
-
-        {dataSource.map((marker) => {
-          const typeMapping: Record<string, 'culture' | 'concert' | 'sport' | 'food'> = {
-            divadlo: 'culture',
-            koncert: 'concert',
-            sport: 'sport',
-            restaurace: 'food',
-            kino: 'culture',
-          };
-          const name = marker.title ?? 'Unknown place';
-          const description = marker.description ?? '';
-          const type = typeMapping[marker.type] ?? 'culture';
-
-          console.log('Rendering marker at position:', marker.position);
-
+        {markersDataState.map((marker) => {
           const [lat, lng] = marker.position as [number, number];
           return (
             <Marker
@@ -81,23 +76,22 @@ export default function MapContainer({ markersData }: MapContainerProps) {
               position={[lat, lng]}
               icon={L.divIcon({
                 html: `<div style="width:20px;height:20px;background:red;border-radius:50%;"></div>`,
-                className: '',
+                className: "",
                 iconSize: [20, 20],
                 iconAnchor: [10, 10],
               })}
             >
               <Popup>
-                <h3>{name}</h3>
-                <p>{description}</p>
-                
-                <p>Type: {marker.type}</p>
+                <h3>{marker.title}</h3>
+                <p>{marker.description}</p>
               </Popup>
             </Marker>
           );
         })}
-
         <MapController />
       </LeafletMapContainer>
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(MapContainer), { ssr: false });

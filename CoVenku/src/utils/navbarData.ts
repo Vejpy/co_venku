@@ -1,9 +1,8 @@
 import { NavbarItem } from "@/types/navbar";
 
 export const navbarItems: NavbarItem[] = [
-  { id: 1, label: "Home", href: "/" },
-  { id: 2, label: "Map", href: "/Map" },
-  { id: 3, label: "Analytics", href: "/Analytics/page" },
-  { id: 4, label: "Account", href: "/Account" },
-  { id: 5, label: "Login / Register", href: "/Login_Register" },
+{ id: 1, label: "Analytics", href: "/Analytics" },
+{ id: 2, label: "Account", href: "/Account" },
+{ id: 3, label: "Contact", href: "/Contact" },
+{ id: 4, label: "Source", href: "/Source" },
 ];

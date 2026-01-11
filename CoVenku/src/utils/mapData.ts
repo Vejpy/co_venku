@@ -1,13 +1,12 @@
-import { MarkerData, CulturePlaceResponse, CulturePlace } from '../types/map';
+import { MarkerData, CulturePlaceResponse, CulturePlace } from "../types/map";
+import { fetchCulturePlacesRaw } from "@/services/api";
 
-// Fetches markers from the backend API and converts them into MarkerData
 export async function fetchMarkers(): Promise<MarkerData[]> {
-  console.log('Fetching markers from API...');
-  const response = await fetch('http://172.26.10.213:7247/api/CulturePlace/All');
-  const data: CulturePlaceResponse = await response.json();
-  console.log('Raw API data:', data);
+  console.log("Fetching markers from API...");
 
-  // Map API data to MarkerData
+  const data: CulturePlaceResponse = await fetchCulturePlacesRaw();
+  console.log("Raw API data:", data);
+
   return data.data.map((place: CulturePlace) => {
     const mappedMarker: MarkerData = {
       id: place.id,
@@ -18,7 +17,8 @@ export async function fetchMarkers(): Promise<MarkerData[]> {
       number: place.id,
       position: [Number(place.address.lat), Number(place.address.lon)],
     };
-    console.log('Mapped marker:', mappedMarker);
+
+    console.log("Mapped marker:", mappedMarker);
     return mappedMarker;
   });
 }

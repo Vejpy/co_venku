@@ -1,4 +1,3 @@
-// src/components/map/CustomSVGMarker.tsx
 'use client';
 
 import React, { JSX } from 'react';
@@ -18,10 +17,10 @@ const typeColors: Record<string, string> = {
 };
 
 const typeShapes: Record<string, JSX.Element> = {
-  culture: <rect x="8" y="8" width="16" height="16" fill="white" />,  // squares
-  concert: <polygon points="14,6 24,26 4,26" fill="white" />,            // triangle
-  sport: <circle cx="16" cy="16" r="8" fill="white" />,              // circle
-  food: <path d="M16 6 L26 26 L6 26 Z" fill="white" />,                 // stylized triangle (can change)
+  culture: <rect x="8" y="8" width="16" height="16" fill="white" />,  
+  concert: <polygon points="14,6 24,26 4,26" fill="white" />,           
+  sport: <circle cx="16" cy="16" r="8" fill="white" />,              
+  food: <path d="M16 6 L26 26 L6 26 Z" fill="white" />,                
 };
 
 const CustomSVGMarker: React.FC<CustomSVGMarkerProps> = ({ type, selected = false, number, size = 32 }) => {
@@ -37,13 +36,9 @@ const CustomSVGMarker: React.FC<CustomSVGMarkerProps> = ({ type, selected = fals
       style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
       className="hover:scale-110"
     >
-      {/* Circle background */}
       <circle cx="16" cy="16" r="14" fill={color} stroke={strokeColor} strokeWidth="2" />
-
-      {/* Shape representing type */}
       {typeShapes[type]}
 
-      {/* Number inside marker */}
       {number !== undefined && (
         <text
           x="16"

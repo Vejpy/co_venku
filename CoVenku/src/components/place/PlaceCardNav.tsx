@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 interface PlaceCardNavProps {
-  imageUrl: string;
+  imageUrl?: string | null;
   name: string;
   visitors: number;
   description: string;
@@ -12,7 +12,13 @@ const PlaceCardNav: React.FC<PlaceCardNavProps> = ({ imageUrl, name, description
   return (
     <div className="flex flex-col w-64 bg-white rounded-lg p-5 mt-10 shadow-md overflow-hidden">
       <div className="relative w-full h-48 pt-20">
-        <Image src={imageUrl} alt={name} layout="fill" objectFit="cover" />
+        {imageUrl && imageUrl.trim() !== "" ? (
+          <Image src={imageUrl} alt={name} layout="fill" objectFit="cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
+            No image
+          </div>
+        )}
       </div>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{name}</h2>
