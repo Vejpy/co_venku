@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchUserEvents, deleteEvent } from "@/services/api";
 import EventForm from "./EventForm";
@@ -26,7 +26,7 @@ export default function UserEventsList() {
   const [editingEvent, setEditingEvent] = useState<CultureEvent | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     if (!user?.id) return;
 
     setLoading(true);
@@ -40,13 +40,13 @@ export default function UserEventsList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     if (user?.id) {
       loadEvents();
     }
-  }, [user?.id]);
+  }, [loadEvents, user?.id]);
 
   const handleDelete = async (eventId: number) => {
     try {
