@@ -7,10 +7,12 @@ interface SourceItemProps {
 
 export default function SourceItemComponent({ item }: SourceItemProps) {
   return (
-    <article className="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition flex flex-col">
-      <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
+    <article className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all flex flex-col">
+      <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+        {item.name}
+      </h2>
 
-      <p className="text-gray-700 dark:text-gray-300 mb-3">
+      <p className="text-gray-600 dark:text-gray-400 mb-3">
         {item.description}
       </p>
 
@@ -21,7 +23,7 @@ export default function SourceItemComponent({ item }: SourceItemProps) {
             alt={item.name}
             width={200}
             height={200}
-            className="rounded object-contain"
+            className="rounded-lg object-contain"
           />
         </div>
       )}
@@ -31,9 +33,9 @@ export default function SourceItemComponent({ item }: SourceItemProps) {
           href={item.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 dark:text-blue-400 hover:underline mt-auto"
+          className="text-primary hover:underline mt-auto font-medium"
         >
-          Visit
+          Navštívit
         </a>
       )}
     </article>

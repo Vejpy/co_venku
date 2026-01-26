@@ -8,17 +8,17 @@ export default async function SourcePage() {
   const totalSources = sources.length;
 
   return (
-    <div className="min-h-screen flex flex-col p-4 mt-10 sm:p-8 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen flex flex-col p-4 mt-10 sm:p-8 bg-background text-foreground transition-colors duration-200">
       <header className="mb-8">
-        <h1 className="text-4xl sm:text-5xl font-bold">Project Sources</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
+          Zdroje projektu
+        </h1>
 
         <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Total sources used: {totalSources}
+          Celkem použitých zdrojů: {totalSources}
         </p>
 
-        <ScrollButton targetId="source-list">
-          Scroll to list
-        </ScrollButton>
+        <ScrollButton targetId="source-list">Přejít na seznam</ScrollButton>
       </header>
 
       <main>

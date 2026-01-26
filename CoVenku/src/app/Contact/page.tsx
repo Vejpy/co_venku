@@ -3,11 +3,20 @@ import ContactInfo from "@/components/contact/ContactInfo";
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-white text-black p-6 sm:p-12">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-8">Contact Us</h1>
-      <div className="grid gap-12 lg:grid-cols-2">
-        <ContactInfo />
-        <ContactForm />
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 transition-colors">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Kontaktujte nás
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
+            Máte dotaz nebo nápad? Rádi vám odpovíme.
+          </p>
+        </div>
+        <div className="grid gap-8 lg:grid-cols-2">
+          <ContactInfo />
+          <ContactForm />
+        </div>
       </div>
     </main>
   );

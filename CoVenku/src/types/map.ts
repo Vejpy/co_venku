@@ -1,4 +1,4 @@
-import { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from "leaflet";
 
 export interface Address {
   id: number;
@@ -16,9 +16,10 @@ export interface CulturePlace {
   name: string;
   description?: string;
   website?: string;
+  webUrl?: string;
   address: Address;
   type: string;
-  else?: string; 
+  else?: string;
 }
 
 export interface CulturePlaceResponse {

@@ -6,6 +6,7 @@ import { MarkerData } from "../../types/map";
 import { fetchMarkers } from "../../utils/mapData";
 import dynamic from "next/dynamic";
 import { LatLngExpression } from "leaflet";
+import { useTheme } from "../../context/ThemeContext";
 
 interface MapContainerProps {
   markersData?: MarkerData[];
@@ -13,6 +14,7 @@ interface MapContainerProps {
 
 function MapContainer({}: MapContainerProps) {
   const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
+  const { theme } = useTheme();
   const [LeafletComponents, setLeafletComponents] = useState<{
     L: typeof import("leaflet");
     MapContainer: typeof import("react-leaflet").MapContainer;
@@ -25,8 +27,16 @@ function MapContainer({}: MapContainerProps) {
   useEffect(() => {
     async function loadLeaflet() {
       const L = await import("leaflet");
-      const { MapContainer, TileLayer, Marker, Popup, useMap } = await import("react-leaflet");
-      setLeafletComponents({ L, MapContainer, TileLayer, Marker, Popup, useMap });
+      const { MapContainer, TileLayer, Marker, Popup, useMap } =
+        await import("react-leaflet");
+      setLeafletComponents({
+        L,
+        MapContainer,
+        TileLayer,
+        Marker,
+        Popup,
+        useMap,
+      });
     }
     loadLeaflet();
   }, []);
@@ -46,9 +56,23 @@ function MapContainer({}: MapContainerProps) {
   if (!LeafletComponents) return <div>Loading map...</div>;
   if (markersDataState.length === 0) return <div>Loading markers...</div>;
 
-  const { L, MapContainer: LeafletMapContainer, TileLayer, Marker, Popup, useMap } = LeafletComponents;
+  const {
+    L,
+    MapContainer: LeafletMapContainer,
+    TileLayer,
+    Marker,
+    Popup,
+    useMap,
+  } = LeafletComponents;
 
   const firstMarker = markersDataState[0]?.position ?? [50.08804, 14.42076];
+
+  // Tile layer URLs pro light a dark mode
+  const tileUrls = {
+    light:
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  };
 
   const MapController: React.FC = () => {
     const map = useMap();
@@ -57,14 +81,21 @@ function MapContainer({}: MapContainerProps) {
       map.flyTo(coords, 15, { duration: 3 });
     };
 
-    return <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />;
+    return (
+      <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />
+    );
   };
 
   return (
     <div style={{ width: "100%", height: "90vh", position: "relative" }}>
-      <LeafletMapContainer center={firstMarker} zoom={13} style={{ width: "100%", height: "100%" }}>
+      <LeafletMapContainer
+        key={theme}
+        center={firstMarker}
+        zoom={13}
+        style={{ width: "100%", height: "100%" }}
+      >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url={tileUrls[theme]}
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           maxZoom={19}
         />

@@ -16,7 +16,12 @@ interface PlacesNavProps {
   onOpen: () => void;
 }
 
-const PlacesNav: React.FC<PlacesNavProps> = ({ place, isOpen, onClose, onOpen }) => {
+const PlacesNav: React.FC<PlacesNavProps> = ({
+  place,
+  isOpen,
+  onClose,
+  onOpen,
+}) => {
   useEffect(() => {
     if (place) {
       onOpen();
@@ -25,20 +30,22 @@ const PlacesNav: React.FC<PlacesNavProps> = ({ place, isOpen, onClose, onOpen })
 
   return (
     <nav
-      className={`fixed inset-0 z-50 bg-white shadow-lg flex flex-col transform transition-transform h-full max-h-screen overflow-y-auto duration-300 ease-in-out md:relative md:inset-auto md:w-72 md:translate-x-0 ${
+      className={`fixed inset-0 z-50 bg-white dark:bg-gray-900 shadow-lg flex flex-col transform transition-transform h-full max-h-screen overflow-y-auto duration-300 ease-in-out md:relative md:inset-auto md:w-72 md:translate-x-0 ${
         isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
       }`}
       aria-hidden={!isOpen}
     >
-      <div className="border-b border-gray-200 p-4 flex items-center bg-white z-10 mt-20 md:mt-16">
+      <div className="border-b border-gray-200 dark:border-gray-700 p-4 flex items-center bg-white dark:bg-gray-900 z-10 mt-20 md:mt-16">
         <button
           onClick={onClose}
-          aria-label="Close navigation"
-          className="mr-4 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded text-2xl"
+          aria-label="Zavřít navigaci"
+          className="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-primary rounded text-2xl"
         >
           {"<"}
         </button>
-        <h1 className="text-xl font-bold w-full text-center">Place Details</h1>
+        <h1 className="text-xl font-bold w-full text-center text-gray-900 dark:text-white">
+          Detail místa
+        </h1>
       </div>
       <div className="flex-1 flex justify-center items-center p-6 md:p-4 overflow-y-auto">
         <div className="max-h-[80vh] overflow-auto">
@@ -50,7 +57,9 @@ const PlacesNav: React.FC<PlacesNavProps> = ({ place, isOpen, onClose, onOpen })
               description={place.description}
             />
           ) : (
-            <p className="text-gray-500">No place selected.</p>
+            <p className="text-gray-500 dark:text-gray-400">
+              Žádné místo nevybráno.
+            </p>
           )}
         </div>
       </div>

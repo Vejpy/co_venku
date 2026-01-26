@@ -7,7 +7,10 @@ interface ScrollButtonProps {
   children: React.ReactNode;
 }
 
-export default function ScrollButton({ targetId, children }: ScrollButtonProps) {
+export default function ScrollButton({
+  targetId,
+  children,
+}: ScrollButtonProps) {
   const handleClick = () => {
     const target = document.getElementById(targetId);
     target?.scrollIntoView({ behavior: "smooth" });
@@ -16,7 +19,7 @@ export default function ScrollButton({ targetId, children }: ScrollButtonProps) 
   return (
     <button
       onClick={handleClick}
-      className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium"
     >
       {children}
     </button>

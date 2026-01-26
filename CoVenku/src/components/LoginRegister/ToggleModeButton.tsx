@@ -5,15 +5,23 @@ interface ToggleModeButtonProps {
   onToggle: () => void;
 }
 
-const ToggleModeButton: React.FC<ToggleModeButtonProps> = ({ mode, onToggle }) => {
+const ToggleModeButton: React.FC<ToggleModeButtonProps> = ({
+  mode,
+  onToggle,
+}) => {
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className="text-blue-600 hover:underline transition"
-    >
-      {mode === "login" ? "Don't have an account? Register" : "Already have an account? Login"}
-    </button>
+    <div className="text-center">
+      <span className="text-sm text-gray-500 dark:text-gray-400">
+        {mode === "login" ? "Nemáte účet? " : "Už máte účet? "}
+      </span>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors"
+      >
+        {mode === "login" ? "Zaregistrujte se" : "Přihlaste se"}
+      </button>
+    </div>
   );
 };
 
