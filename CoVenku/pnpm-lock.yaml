@@ -33,7 +33,7 @@ importers:
         specifier: ^5.16.0
         version: 5.17.0
       next:
-        specifier: ^15.5.7
+        specifier: ^15.5.11
         version: 15.5.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       pg:
         specifier: ^8.16.3
