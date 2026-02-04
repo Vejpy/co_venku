@@ -1,7 +1,5 @@
 "use client";
 
-
-
 type Tab = "overview" | "events" | "favorites" | "history" | "settings";
 
 export default function Tabs({
@@ -16,7 +14,9 @@ export default function Tabs({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl">
       <div className="flex gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
-        {(["overview","events","favorites","history","settings"] as Tab[]).map((tab) => (
+        {(
+          ["overview", "events", "favorites", "history", "settings"] as Tab[]
+        ).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -35,15 +35,11 @@ export default function Tabs({
       <div className="p-6">
         {activeTab === "overview" && <div>Přehled...</div>}
 
-        
-
         {activeTab === "favorites" && <div>Oblíbené...</div>}
 
         {activeTab === "history" && <div>Historie...</div>}
 
-        {activeTab === "settings" && (
-          <button onClick={logout}>Odhlásit</button>
-        )}
+        {activeTab === "settings" && <button onClick={logout}>Odhlásit</button>}
       </div>
     </div>
   );
