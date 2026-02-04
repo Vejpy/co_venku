@@ -41,7 +41,7 @@ export default function MarkerItem({ position, place }: MarkerItemProps) {
   return (
     <Marker position={position} icon={customIcon}>
       <Popup
-        className="!p-0 !m-0"
+        className="p-0! m-0"
           minWidth={0}
           maxWidth={300}
           autoPan={false}

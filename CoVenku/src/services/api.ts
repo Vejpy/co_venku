@@ -1,20 +1,16 @@
-import axios from "axios";
+import axios, {
+  AxiosRequestConfig,
+} from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:7247/api",
+  baseURL: "https://api-venku.bezvod.cz/api",
   timeout: 10000,
 });
 
-// Add auth token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth_token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-export async function get(endpoint: string, options = {}) {
+export async function get(
+  endpoint: string,
+  options: AxiosRequestConfig = {},
+) {
   const response = await api.get(endpoint, options);
 
   if (response.status !== 200) {
@@ -35,7 +31,13 @@ export async function post<T>(endpoint: string, data: T, options = {}) {
 }
 
 export async function fetchCulturePlacesRaw() {
-  return await get("/CulturePlace/All");
+  const data = await get("/CulturePlace/All?description=false");
+
+  if (!data || !Array.isArray(data.data)) {
+    return { data: [] };
+  }
+
+  return data;
 }
 
 export async function registerUser(payload: {
@@ -74,7 +76,7 @@ export async function getCurrentUser() {
 
 // Event APIs
 export async function fetchAllEvents() {
-  const response = await api.get("/Event/all");
+  const response = await api.get("/CulturePlace/All?description=false");
   return response.data;
 }
 

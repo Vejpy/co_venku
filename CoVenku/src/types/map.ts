@@ -1,4 +1,4 @@
-import { LatLngExpression } from "leaflet";
+// import { LatLngExpression } from "leaflet";
 
 export interface Address {
   id: number;
@@ -31,9 +31,10 @@ export interface CulturePlaceResponse {
 export interface MarkerData {
   id: number;
   title: string;
+  name: string;
   description?: string;
   imageUrl?: string;
   type: string;
   number: number;
-  position: LatLngExpression;
+  position: [number, number];
 }

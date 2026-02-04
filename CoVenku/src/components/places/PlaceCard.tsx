@@ -26,7 +26,7 @@ export function PlaceCard({ place, isSelected, onClick }: PlaceCardProps) {
     >
       {/* Icon badge */}
       <div
-        className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-lg"
+        className="shrink-0 flex items-center justify-center w-12 h-12 rounded-lg"
         style={{ backgroundColor: `${color}15`, color: color }}
       >
         {icon}

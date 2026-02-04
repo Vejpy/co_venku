@@ -5,47 +5,77 @@ import SearchBar from "./SearchBar";
 import { MarkerData } from "../../types/map";
 import { fetchMarkers } from "../../utils/mapData";
 import dynamic from "next/dynamic";
-import { LatLngExpression } from "leaflet";
 import { useTheme } from "../../context/ThemeContext";
+import { LatLngExpression } from "leaflet";
+import {
+  Map,
+  MapClusterLayer,
+  MapControls,
+  MapPopup,
+  MapMarker,
+  MarkerContent,
+} from "../../components/ui/map";
+
+interface CulturePlace {
+  name?: string;
+  description?: string;
+  website?: string;
+  webUrl?: string;
+  type?: string;
+  address?: string;
+  position: [number, number];
+}
 
 interface MapContainerProps {
   markersData?: MarkerData[];
 }
 
+const DEFAULT_CENTER: [number, number] = [15.8326259, 50.2094261];
+
+function MapControlsExample() {
+  return <MapControls />;
+}
+
 function MapContainer({}: MapContainerProps) {
   const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
+  const [geoJsonData, setGeoJsonData] = useState<GeoJSON.FeatureCollection<
+    GeoJSON.Point,
+    MarkerData
+  > | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<CulturePlace | null>(
+    null,
+  );
   const { theme } = useTheme();
-  const [LeafletComponents, setLeafletComponents] = useState<{
-    L: typeof import("leaflet");
-    MapContainer: typeof import("react-leaflet").MapContainer;
-    TileLayer: typeof import("react-leaflet").TileLayer;
-    Marker: typeof import("react-leaflet").Marker;
-    Popup: typeof import("react-leaflet").Popup;
-    useMap: typeof import("react-leaflet").useMap;
-  } | null>(null);
-
-  useEffect(() => {
-    async function loadLeaflet() {
-      const L = await import("leaflet");
-      const { MapContainer, TileLayer, Marker, Popup, useMap } =
-        await import("react-leaflet");
-      setLeafletComponents({
-        L,
-        MapContainer,
-        TileLayer,
-        Marker,
-        Popup,
-        useMap,
-      });
-    }
-    loadLeaflet();
-  }, []);
 
   useEffect(() => {
     async function loadMarkers() {
       try {
         const data = await fetchMarkers();
+        console.log("Loaded markers:", data);
         setMarkersDataState(data);
+
+        // Transform to GeoJSON
+        const features = data.map((marker) => ({
+          type: "Feature" as const,
+          geometry: {
+            type: "Point" as const,
+            coordinates: Array.isArray(marker.position)
+              ? [marker.position[1], marker.position[0]]
+              : [0, 0],
+          },
+          properties: marker,
+        }));
+
+        const featureCollection: GeoJSON.FeatureCollection<
+          GeoJSON.Point,
+          MarkerData
+        > = {
+          type: "FeatureCollection",
+          features,
+        };
+
+        console.log("GeoJSON data:", featureCollection);
+        setGeoJsonData(featureCollection);
       } catch (err) {
         console.error("Failed to fetch markers:", err);
       }
@@ -53,74 +83,132 @@ function MapContainer({}: MapContainerProps) {
     loadMarkers();
   }, []);
 
-  if (!LeafletComponents) return <div>Loading map...</div>;
-  if (markersDataState.length === 0) return <div>Loading markers...</div>;
+  const firstMarker = markersDataState[0]?.position ?? DEFAULT_CENTER;
 
-  const {
-    L,
-    MapContainer: LeafletMapContainer,
-    TileLayer,
-    Marker,
-    Popup,
-    useMap,
-  } = LeafletComponents;
-
-  const firstMarker = markersDataState[0]?.position ?? [50.08804, 14.42076];
-
-  // Tile layer URLs pro light a dark mode
-  const tileUrls = {
-    light:
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  const handleSearchSelect = (coords: LatLngExpression) => {
+    console.log("Search selected coordinates:", coords);
   };
 
-  const MapController: React.FC = () => {
-    const map = useMap();
+  const handleMarkerClick = (marker: CulturePlace) => {
+    setSelectedMarker(marker);
+  };
 
-    const handleSearchSelect = (coords: LatLngExpression) => {
-      map.flyTo(coords, 15, { duration: 3 });
-    };
-
+  if (!geoJsonData) {
     return (
-      <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />
+      <div
+        style={{
+          width: "100%",
+          height: "90vh",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div>Loading map...</div>
+      </div>
     );
-  };
+  }
 
   return (
     <div style={{ width: "100%", height: "90vh", position: "relative" }}>
-      <LeafletMapContainer
-        key={theme}
-        center={firstMarker}
-        zoom={13}
-        style={{ width: "100%", height: "100%" }}
+      <div
+        style={{
+          position: "absolute",
+          top: 6,
+          left: 12,
+          zIndex: 10,
+          width: "calc(100% - 24px)",
+        }}
       >
-        <TileLayer
-          url={tileUrls[theme]}
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          maxZoom={19}
+        <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />
+      </div>
+      <Map center={DEFAULT_CENTER} zoom={13} theme={theme}>
+        <MapClusterLayer
+          data={geoJsonData}
+          onPointClick={(feature) => {
+            if (feature && feature.properties && feature.geometry.coordinates) {
+              const [lng, lat] = feature.geometry.coordinates;
+              setSelectedMarker({
+                ...feature.properties,
+                position: [lat, lng],
+              });
+            }
+          }}
         />
-        {markersDataState.map((marker) => {
-          const [lat, lng] = marker.position as [number, number];
-          return (
-            <Marker
-              key={marker.id}
-              position={[lat, lng]}
-              icon={L.divIcon({
-                html: `<div style="width:20px;height:20px;background:red;border-radius:50%;"></div>`,
-                className: "",
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-              })}
-            >
-              <Popup>
-                <h3>{marker.title}</h3>
-                <p>{marker.description}</p>
-              </Popup>
-            </Marker>
-          );
-        })}
-        <MapController />
-      </LeafletMapContainer>
+        {selectedMarker && (
+          <MapPopup
+            latitude={selectedMarker.position[0]}
+            longitude={selectedMarker.position[1]}
+          >
+            <div style={{ maxWidth: 300, fontFamily: "Arial, sans-serif" }}>
+              <h3
+                style={{
+                  margin: "0 0 6px 0",
+                  fontSize: "1.2em",
+                  color: theme === "dark" ? "#fff" : "#000",
+                }}
+              >
+                {selectedMarker.name}
+              </h3>
+              {selectedMarker.description && (
+                <p
+                  style={{
+                    margin: "0 0 6px 0",
+                    fontSize: "0.9em",
+                    color: theme === "dark" ? "#ccc" : "#333",
+                  }}
+                >
+                  {selectedMarker.description}
+                </p>
+              )}
+              {selectedMarker.type && (
+                <p
+                  style={{
+                    margin: "0 0 4px 0",
+                    fontSize: "0.85em",
+                    fontWeight: "bold",
+                    color: theme === "dark" ? "#aaa" : "#555",
+                  }}
+                >
+                  Type: {selectedMarker.type}
+                </p>
+              )}
+              {selectedMarker.address && (
+                <p
+                  style={{
+                    margin: "0 0 6px 0",
+                    fontSize: "0.9em",
+                    color: theme === "dark" ? "#ccc" : "#333",
+                  }}
+                >
+                  Address: {selectedMarker.address}
+                </p>
+              )}
+              {(selectedMarker.website || selectedMarker.webUrl) && (
+                <a
+                  href={selectedMarker.website ?? selectedMarker.webUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    marginTop: 8,
+                    backgroundColor: "#28a745",
+                    color: "#fff",
+                    padding: "6px 8px",
+                    borderRadius: 4,
+                    textDecoration: "none",
+                    fontSize: "0.9em",
+                  }}
+                >
+                  More Info
+                </a>
+              )}
+            </div>
+          </MapPopup>
+        )}
+        <MapControlsExample />
+      </Map>
     </div>
   );
 }

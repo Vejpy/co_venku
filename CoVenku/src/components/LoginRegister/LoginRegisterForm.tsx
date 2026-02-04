@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const LoginRegisterForm: React.FC = () => {
   const router = useRouter();
-  const { login, refreshUser } = useAuth();
+  const { login } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
