@@ -6,14 +6,11 @@ import { MarkerData } from "../../types/map";
 import { fetchMarkers } from "../../utils/mapData";
 import dynamic from "next/dynamic";
 import { useTheme } from "../../context/ThemeContext";
-import { LatLngExpression } from "leaflet";
 import {
   Map,
   MapClusterLayer,
   MapControls,
   MapPopup,
-  MapMarker,
-  MarkerContent,
 } from "../../components/ui/map";
 
 interface CulturePlace {
@@ -83,16 +80,6 @@ function MapContainer({}: MapContainerProps) {
     loadMarkers();
   }, []);
 
-  const firstMarker = markersDataState[0]?.position ?? DEFAULT_CENTER;
-
-  const handleSearchSelect = (coords: LatLngExpression) => {
-    console.log("Search selected coordinates:", coords);
-  };
-
-  const handleMarkerClick = (marker: CulturePlace) => {
-    setSelectedMarker(marker);
-  };
-
   if (!geoJsonData) {
     return (
       <div
@@ -121,7 +108,7 @@ function MapContainer({}: MapContainerProps) {
           width: "calc(100% - 24px)",
         }}
       >
-        <SearchBar markers={markersDataState} onSelect={handleSearchSelect} />
+        <SearchBar markers={markersDataState} onSelect={() => {}} />
       </div>
       <Map center={DEFAULT_CENTER} zoom={13} theme={theme}>
         <MapClusterLayer
@@ -140,6 +127,8 @@ function MapContainer({}: MapContainerProps) {
           <MapPopup
             latitude={selectedMarker.position[0]}
             longitude={selectedMarker.position[1]}
+            closeButton={true}
+            onClose={() => setSelectedMarker(null)}
           >
             <div style={{ maxWidth: 300, fontFamily: "Arial, sans-serif" }}>
               <h3

@@ -1,6 +1,6 @@
 "use client";
 
-import UserEventsList from "@/components/events/UserEventsList";
+
 
 type Tab = "overview" | "events" | "favorites" | "history" | "settings";
 
@@ -35,7 +35,7 @@ export default function Tabs({
       <div className="p-6">
         {activeTab === "overview" && <div>Přehled...</div>}
 
-        {activeTab === "events" && <UserEventsList />}
+        
 
         {activeTab === "favorites" && <div>Oblíbené...</div>}
 

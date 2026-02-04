@@ -40,7 +40,7 @@ export default function SearchBar({ markers, onSelect }: SearchBarProps) {
   };
 
   return (
-    <div className="absolute top-2.5 right-2.5 z-[1000] bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+    <div className="absolute top-2.5 right-2.5 z-1000 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
       <input
         type="text"
         value={query}
@@ -49,7 +49,7 @@ export default function SearchBar({ markers, onSelect }: SearchBarProps) {
         className="p-2 w-52 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
       />
       {filteredMarkers.length > 0 && (
-        <ul className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 mt-1 p-2 list-none max-h-[150px] overflow-y-auto rounded">
+        <ul className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 mt-1 p-2 list-none max-h-150px overflow-y-auto rounded">
           {filteredMarkers.map((marker) => (
             <li
               key={marker.id}

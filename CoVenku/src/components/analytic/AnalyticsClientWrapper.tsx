@@ -1,6 +1,7 @@
 "use client";
 
 import { usePlaces } from "@/hooks/usePlaces";
+import { CulturePlace } from "@/types/map";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 
 export default function AnalyticsClientWrapper() {
@@ -26,11 +27,11 @@ export default function AnalyticsClientWrapper() {
     );
   }
 
-  const mappedPlaces = places.map((p: any) => ({
+  const mappedPlaces = places.map((p: CulturePlace) => ({
     id: p.id,
     name: p.name,
-    imageUrl: p.imageUrl ?? "",
-    visitors: typeof p.visitors === "number" ? p.visitors : 0,
+    imageUrl: "",
+    visitors: 0,
     description: p.description,
   }));
 
