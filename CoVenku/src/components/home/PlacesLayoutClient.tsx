@@ -32,15 +32,15 @@ export default function PlacesLayoutClient() {
   return (
     <div className="flex flex-col h-full md:flex-row">
       <div className="w-full md:w-1/3 overflow-y-auto">
-        <PlaceList
+        <PlaceList //výpis míst v levém panelu od mapy
           places={places}
           selectedPlaceId={selectedPlaceId}
-          onPlaceSelect={setSelectedPlaceId}
+          onPlaceSelect={(placeId: number) => setSelectedPlaceId(placeId)}
           isLoading={loading}
         />
       </div>
       <div className="flex-1">
-        <MapContainer />
+        <MapContainer selectedPlaceId={selectedPlaceId} />
       </div>
     </div>
   );

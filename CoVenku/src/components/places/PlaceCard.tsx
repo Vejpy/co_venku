@@ -16,7 +16,10 @@ export function PlaceCard({ place, isSelected, onClick }: PlaceCardProps) {
 
   return (
     <div
-      onClick={onClick}
+      onClick={() => {
+        console.log("PlaceCard clicked:", place.id);
+        onClick?.();
+      }}
       className={cn(
         "flex gap-4 p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md",
         isSelected

@@ -25,6 +25,8 @@ interface CulturePlace {
 
 interface MapContainerProps {
   markersData?: MarkerData[];
+  places?: CulturePlace[];
+  selectedPlaceId?: number | null;
 }
 
 const DEFAULT_CENTER: [number, number] = [15.8326259, 50.2094261];
@@ -33,7 +35,7 @@ function MapControlsExample() {
   return <MapControls />;
 }
 
-function MapContainer({}: MapContainerProps) {
+function MapContainer({ markersData, places, selectedPlaceId }: MapContainerProps) {
   const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
   const [geoJsonData, setGeoJsonData] = useState<GeoJSON.FeatureCollection<
     GeoJSON.Point,
@@ -43,6 +45,16 @@ function MapContainer({}: MapContainerProps) {
     null,
   );
   const { theme } = useTheme();
+  const [center, setCenter] = useState<[number, number]>(DEFAULT_CENTER);
+  const [zoom, setZoom] = useState<number>(13);
+  useEffect(() => {
+    if (!selectedPlaceId || !markersDataState) return;
+    const marker = markersDataState.find((m) => m.id === selectedPlaceId);
+    if (!marker || !Array.isArray(marker.position)) return;
+    const [lat, lng] = marker.position;
+    setCenter([lng, lat]); // map expects [lng, lat]
+    setZoom(16);
+  }, [selectedPlaceId, markersDataState]);
 
   useEffect(() => {
     async function loadMarkers() {
@@ -110,7 +122,7 @@ function MapContainer({}: MapContainerProps) {
       >
         <SearchBar markers={markersDataState} onSelect={() => {}} />
       </div>
-      <Map center={DEFAULT_CENTER} zoom={13} theme={theme}>
+      <Map center={center} zoom={zoom} theme={theme}>
         <MapClusterLayer
           data={geoJsonData}
           onPointClick={(feature) => {
