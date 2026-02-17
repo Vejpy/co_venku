@@ -1,6 +1,27 @@
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Kontakt | CoVenku",
+  description: "Kontaktujte nás pro více informací, dotazy nebo spolupráci.",
+  openGraph: {
+    title: "Kontakt | CoVenku",
+    description: "Kontaktujte nás pro více informací, dotazy nebo spolupráci.",
+    url: "https://co-venku.vercel.app/Contact",
+    siteName: "CoVenku",
+    locale: "cs_CZ",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kontakt | CoVenku",
+    description: "Kontaktujte nás pro více informací, dotazy nebo spolupráci.",
+  },
+  alternates: { canonical: "/Contact" },
+};
+
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 transition-colors">
