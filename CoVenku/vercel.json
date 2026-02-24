@@ -1,9 +1,9 @@
 {
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "www.co-venku.vercel.app" }],
-      "destination": "https://co-venku.vercel.app/:1",
+      "destination": "https://co-venku.vercel.app/:path*",
       "permanent": true
     }
   ]
