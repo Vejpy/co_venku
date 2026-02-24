@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.co-venku.vercel.app" }],
+      "destination": "https://co-venku.vercel.app/:1",
+      "permanent": true
+    }
+  ]
+}

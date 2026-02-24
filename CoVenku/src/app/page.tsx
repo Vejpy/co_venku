@@ -70,6 +70,25 @@ export default function HomePage() {
         </h2>
       </div>
 
+      {/* JSON-LD Structured Data for Organization */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "CoVenku",
+            url: "https://covenku.cz",
+            sameAs: [
+              "https://www.facebook.com/Covenku",
+              "https://www.instagram.com/covenku",
+              "https://www.linkedin.com/company/covenku",
+              "https://www.youtube.com/@Covenku",
+            ],
+          }),
+        }}
+      />
+
       <PlacesLayoutClient />
     </div>
   );
