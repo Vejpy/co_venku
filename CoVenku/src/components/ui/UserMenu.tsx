@@ -36,7 +36,7 @@ export default function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md"
+        className="flex items-center gap-2 p-1 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md"
       >
         <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold">
           {initials}

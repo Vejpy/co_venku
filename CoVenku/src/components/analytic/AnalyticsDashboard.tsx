@@ -48,16 +48,6 @@ export default function AnalyticsDashboard({
 
   return (
     <>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
-          Analytika
-        </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          Přehled kulturních míst v databázi
-        </p>
-      </div>
-
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">

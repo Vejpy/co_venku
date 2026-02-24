@@ -1,27 +1,51 @@
+import type { Metadata } from "next";
 import LoginRegisterForm from "@/components/loginRegister/LoginRegisterForm";
 
-import type { Metadata } from "next";
-
 export const metadata: Metadata = {
-  title: "Login a Registrace | CoVenku",
+  metadataBase: new URL("https://covenku.cz"),
+  applicationName: "CoVenku",
+  alternates: {
+    canonical: "/Login_Register",
+  },
+  category: "events",
+  title: "Přihlášení | CoVenku – Akce a aktivity ve tvém okolí",
   description:
-    "Přihlaš se nebo vytvoř účet pro přístup ke všem funkcím CoVenku.",
+    "Přihlas se do CoVenku a objevuj akce, kulturní místa a aktivity ve svém okolí. Najdi co dělat venku ještě dnes.",
+  authors: [{ name: "CoVenku Team" }],
+  creator: "CoVenku Team",
+  publisher: "CoVenku",
+  keywords: [
+    "CoVenku",
+    "přihlášení",
+    "registrace",
+    "akce v okolí",
+    "co dělat venku",
+    "události Česko",
+    "volný čas",
+    "aktivity venku",
+    "Hradec Králové",
+  ],
   openGraph: {
-    title: "Login a Registrace | CoVenku",
+    title: "Přihlášení – CoVenku",
     description:
-      "Přihlaš se nebo vytvoř účet pro přístup ke všem funkcím CoVenku.",
-    url: "https://co-venku.vercel.app/Login_Register",
+      "Přihlas se do aplikace CoVenku a objevuj akce a aktivity ve svém okolí.",
+    url: "https://covenku.cz/Login_Register",
     siteName: "CoVenku",
     locale: "cs_CZ",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CoVenku – Akce a aktivity ve tvém okolí",
+      },
+    ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Login a Registrace | CoVenku",
-    description:
-      "Přihlaš se nebo vytvoř účet pro přístup ke všem funkcím CoVenku.",
+  robots: {
+    index: true,
+    follow: true,
   },
-  alternates: { canonical: "/Login_Register" },
 };
 
 export default function Login_Register() {
@@ -32,10 +56,12 @@ export default function Login_Register() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Vítejte v CoVenku
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Objevujte kulturní místa a události ve vašem okolí
-          </p>
+
+          <h2 className="text-base font-normal text-gray-500 dark:text-gray-400">
+            Objevujte kulturní místa, události a aktivity ve vašem okolí
+          </h2>
         </div>
+
         <LoginRegisterForm />
       </div>
     </div>
