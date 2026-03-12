@@ -44,6 +44,14 @@ interface EventStats {
   salesOverTime: { date: string; count: number }[];
 }
 
+type RawStatItem = Record<string, unknown>;
+
+type RawStats = Partial<EventStats> & {
+  AgeDemographics?: RawStatItem[];
+  GenderDemographics?: RawStatItem[];
+  SalesOverTime?: RawStatItem[];
+};
+
 const CHART_COLORS = ["#2563eb", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0"];
 const ACCENT_BLUE = "#2563eb";
 
@@ -52,6 +60,7 @@ export default function EventStatsModal({
   onClose,
 }: EventStatsModalProps) {
   const { resolvedTheme } = useTheme();
+
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<EventStats | null>(null);
@@ -69,61 +78,60 @@ export default function EventStatsModal({
   useEffect(() => {
     const loadStats = async () => {
       setLoading(true);
+
       try {
         const res = await fetchEventAnalytics(event.id);
+
         if (res?.data) {
-          const normalized = {
-            ...res.data,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ageDemographics: (Array.isArray(
-              (res.data as any).ageDemographics ||
-                (res.data as any).AgeDemographics,
-            )
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (res.data as any).ageDemographics ||
-                (res.data as any).AgeDemographics
-              : []
-            ).map((i: Record<string, unknown>) => ({
+          const data = res.data as RawStats;
+
+          const normalized: EventStats = {
+            totalAttendees: Number(data.totalAttendees ?? 0),
+            views: Number(data.views ?? 0),
+            conversionRate: Number(data.conversionRate ?? 0),
+
+            ageDemographics: (Array.isArray(data.ageDemographics)
+              ? data.ageDemographics
+              : Array.isArray(data.AgeDemographics)
+                ? data.AgeDemographics
+                : []
+            ).map((i: RawStatItem) => ({
               group: String(
-                i.group || i.Group || i.ageGroup || i.AgeGroup || "N/A",
+                i.group ?? i.Group ?? i.ageGroup ?? i.AgeGroup ?? "N/A",
               ),
               count: Number(i.count ?? i.Count ?? 0),
             })),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            genderDemographics: (Array.isArray(
-              (res.data as any).genderDemographics ||
-                (res.data as any).GenderDemographics,
-            )
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (res.data as any).genderDemographics ||
-                (res.data as any).GenderDemographics
-              : []
-            ).map((i: Record<string, unknown>) => ({
-              gender: String(i.gender || i.Gender || "N/A"),
+
+            genderDemographics: (Array.isArray(data.genderDemographics)
+              ? data.genderDemographics
+              : Array.isArray(data.GenderDemographics)
+                ? data.GenderDemographics
+                : []
+            ).map((i: RawStatItem) => ({
+              gender: String(i.gender ?? i.Gender ?? "N/A"),
               count: Number(i.count ?? i.Count ?? 0),
             })),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            salesOverTime: (Array.isArray(
-              (res.data as any).salesOverTime ||
-                (res.data as any).SalesOverTime,
-            )
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (res.data as any).salesOverTime ||
-                (res.data as any).SalesOverTime
-              : []
-            ).map((i: Record<string, unknown>) => ({
-              date: i.date || i.Date || "",
+
+            salesOverTime: (Array.isArray(data.salesOverTime)
+              ? data.salesOverTime
+              : Array.isArray(data.SalesOverTime)
+                ? data.SalesOverTime
+                : []
+            ).map((i: RawStatItem) => ({
+              date: String(i.date ?? i.Date ?? ""),
               count: Number(i.count ?? i.Count ?? 0),
             })),
           };
+
           setStats(normalized);
         }
-      } catch (e) {
+      } catch {
         toast.error("Nepodařilo se načíst statistiky.");
       } finally {
         setLoading(false);
       }
     };
+
     loadStats();
   }, [event.id]);
 
@@ -140,6 +148,7 @@ export default function EventStatsModal({
               Detailní analytický pohled na výkon akce
             </p>
           </div>
+
           <button
             onClick={onClose}
             className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
@@ -155,7 +164,7 @@ export default function EventStatsModal({
             </div>
           ) : stats ? (
             <div className="space-y-6">
-              {/* KPIs */}
+              {/* KPI */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <MetricCard
                   label="Registrace"
@@ -176,6 +185,7 @@ export default function EventStatsModal({
                 <h4 className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-6">
                   Vývoj registrací
                 </h4>
+
                 <div className="h-[280px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={stats.salesOverTime}>
@@ -184,6 +194,7 @@ export default function EventStatsModal({
                         vertical={false}
                         stroke={gridColor}
                       />
+
                       <XAxis
                         dataKey="date"
                         fontSize={10}
@@ -197,12 +208,14 @@ export default function EventStatsModal({
                           })
                         }
                       />
+
                       <YAxis
                         fontSize={10}
                         tickLine={false}
                         axisLine={false}
                         tick={{ fill: tickColor }}
                       />
+
                       <Tooltip
                         contentStyle={{
                           borderRadius: "8px",
@@ -213,6 +226,7 @@ export default function EventStatsModal({
                         }}
                         itemStyle={{ color: ACCENT_BLUE }}
                       />
+
                       <Area
                         type="monotone"
                         dataKey="count"
@@ -233,6 +247,7 @@ export default function EventStatsModal({
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-6">
                     Věková demografie
                   </h4>
+
                   <div className="h-[240px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
@@ -250,6 +265,7 @@ export default function EventStatsModal({
                           tick={{ fill: tickColor }}
                           width={80}
                         />
+
                         <Tooltip
                           cursor={{
                             fill: isDark ? "rgba(255,255,255,0.05)" : "#f9fafb",
@@ -260,6 +276,7 @@ export default function EventStatsModal({
                             background: tooltipBg,
                           }}
                         />
+
                         <Bar
                           dataKey="count"
                           name="Počet"
@@ -277,6 +294,7 @@ export default function EventStatsModal({
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-6">
                     Distribuce pohlaví
                   </h4>
+
                   <div className="h-[240px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -291,15 +309,14 @@ export default function EventStatsModal({
                           paddingAngle={5}
                           stroke="none"
                         >
-                          {stats.genderDemographics.map(
-                            (_: unknown, i: number) => (
-                              <Cell
-                                key={i}
-                                fill={CHART_COLORS[i % CHART_COLORS.length]}
-                              />
-                            ),
-                          )}
+                          {stats.genderDemographics.map((_, i) => (
+                            <Cell
+                              key={i}
+                              fill={CHART_COLORS[i % CHART_COLORS.length]}
+                            />
+                          ))}
                         </Pie>
+
                         <Tooltip
                           contentStyle={{
                             borderRadius: "8px",
@@ -308,6 +325,7 @@ export default function EventStatsModal({
                             color: isDark ? "#fff" : "#000",
                           }}
                         />
+
                         <Legend
                           verticalAlign="bottom"
                           iconType="circle"
@@ -352,6 +370,7 @@ function MetricCard({
         <div className="p-2 bg-gray-50 dark:bg-zinc-800 rounded-lg">
           <Icon className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
         </div>
+
         {!isPercent && (
           <div className="flex items-center text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded">
             <ArrowUpRight className="w-3 h-3 mr-0.5" />
@@ -359,9 +378,11 @@ function MetricCard({
           </div>
         )}
       </div>
+
       <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
         {label}
       </p>
+
       <div className="text-2xl font-bold text-gray-900 dark:text-white mt-1 tracking-tight">
         {value}
       </div>
