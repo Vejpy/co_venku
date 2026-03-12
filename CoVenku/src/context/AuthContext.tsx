@@ -5,8 +5,8 @@ import { getCurrentUser } from "@/services/api";
 
 interface User {
   id: number;
-  name: string;
-  role: string;
+  name: string | null;
+  role: string | null;
   addressId: number;
   birth: string;
   male: boolean;
@@ -54,6 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (newToken: string, userData?: User) => {
     localStorage.setItem("auth_token", newToken);
     sessionStorage.setItem("loggedUser", "true");
+    // Set cookie so Server Components (admin guard) can read the token
+    document.cookie = `auth_token=${newToken}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
     setToken(newToken);
 
     // Always fetch fresh user data after login
@@ -77,6 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     localStorage.removeItem("auth_token");
     sessionStorage.removeItem("loggedUser");
+    // Remove auth cookie
+    document.cookie = "auth_token=; path=/; max-age=0";
     setToken(null);
     setUser(null);
   };

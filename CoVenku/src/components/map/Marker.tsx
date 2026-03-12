@@ -22,7 +22,7 @@ export default function MarkerItem({ position, place }: MarkerItemProps) {
     return (
       <Marker position={position}>
         <Popup>
-          <div className="text-sm text-gray-600">Loading place...</div>
+          <div className="text-sm text-zinc-600">Loading place...</div>
         </Popup>
       </Marker>
     );

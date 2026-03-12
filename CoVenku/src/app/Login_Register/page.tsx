@@ -50,14 +50,14 @@ export const metadata: Metadata = {
 
 export default function Login_Register() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12  transition-colors">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">
             Vítejte v CoVenku
           </h1>
 
-          <h2 className="text-base font-normal text-gray-500 dark:text-gray-400">
+          <h2 className="text-base font-normal text-zinc-500 dark:text-zinc-400">
             Objevujte kulturní místa, události a aktivity ve vašem okolí
           </h2>
         </div>

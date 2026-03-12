@@ -20,7 +20,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden w-84 transform transition-all duration-200 border border-gray-200 dark:border-gray-700 ${!disableHover ? "hover:-translate-y-1 hover:shadow-lg" : ""} ${className || ""}`}
+      className={`bg-white dark:bg-zinc-800 rounded-xl shadow-md overflow-hidden w-84 transform transition-all duration-200 border border-zinc-200 dark:border-zinc-700 ${!disableHover ? "hover:-translate-y-1 hover:shadow-lg" : ""} ${className || ""}`}
       style={{ width: "336px" }}
     >
       <div className="relative w-full h-54" style={{ height: "216px" }}>
@@ -34,16 +34,16 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
         />
       </div>
       <div className="p-4 text-center">
-        <h3 className="text-lg font-medium mb-1 text-gray-900 dark:text-white">
+        <h3 className="text-lg font-medium mb-1 text-zinc-900 dark:text-white">
           {name}
         </h3>
         {visitors !== undefined && (
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
             {visitors.toLocaleString()} návštěvníků
           </p>
         )}
         {description && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
             {description}
           </p>
         )}

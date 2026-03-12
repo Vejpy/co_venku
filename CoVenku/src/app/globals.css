@@ -1,13 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
-
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
-}
+@import "tw-animate-css";
 
 body {
   margin: 0;
@@ -17,13 +10,6 @@ body {
     Arial, sans-serif;
 }
 
-/* Modern nav styling */
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9999;
-}
 
 /* Page sections */
 .page-section {
@@ -91,71 +77,71 @@ nav {
 
 :root {
   --radius: 0.625rem;
-  --background: #f6f9fc;
-  --foreground: #1a1f36;
+  --background: #fafafa;
+  --foreground: #18181b;
   --card: #ffffff;
-  --card-foreground: #1a1f36;
+  --card-foreground: #18181b;
   --popover: #ffffff;
-  --popover-foreground: #1a1f36;
-  --primary: #635bff;
+  --popover-foreground: #18181b;
+  --primary: #2563eb;
   --primary-foreground: #ffffff;
-  --secondary: #f0f0f5;
-  --secondary-foreground: #1a1f36;
-  --muted: #f0f0f5;
-  --muted-foreground: #697386;
-  --accent: #f0f0f5;
-  --accent-foreground: #1a1f36;
-  --destructive: #df1b41;
-  --border: #e3e8ee;
-  --input: #e3e8ee;
-  --ring: #635bff;
-  --chart-1: #635bff;
-  --chart-2: #00d4aa;
-  --chart-3: #ff7f50;
-  --chart-4: #ffc107;
-  --chart-5: #17a2b8;
-  --sidebar: #fafbfc;
-  --sidebar-foreground: #1a1f36;
-  --sidebar-primary: #635bff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #ef4444;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #2563eb;
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #ef4444;
+  --chart-5: #8b5cf6;
+  --sidebar: #f4f4f5;
+  --sidebar-foreground: #18181b;
+  --sidebar-primary: #2563eb;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f0f5;
-  --sidebar-accent-foreground: #1a1f36;
-  --sidebar-border: #e3e8ee;
-  --sidebar-ring: #635bff;
+  --sidebar-accent: #eff6ff;
+  --sidebar-accent-foreground: #1e40af;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #2563eb;
 }
 
 .dark {
-  --background: #0a1628;
-  --foreground: #f6f9fc;
-  --card: #1a2744;
-  --card-foreground: #f6f9fc;
-  --popover: #1a2744;
-  --popover-foreground: #f6f9fc;
-  --primary: #7c3aed;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #1e3a5f;
-  --secondary-foreground: #f6f9fc;
-  --muted: #1e3a5f;
-  --muted-foreground: #9ca3af;
-  --accent: #1e3a5f;
-  --accent-foreground: #f6f9fc;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
   --destructive: #ef4444;
-  --border: #2d4a6f;
-  --input: #2d4a6f;
-  --ring: #7c3aed;
-  --chart-1: #818cf8;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #3b82f6;
+  --chart-1: #60a5fa;
   --chart-2: #34d399;
-  --chart-3: #fb923c;
-  --chart-4: #fbbf24;
-  --chart-5: #22d3ee;
-  --sidebar: #0f1d32;
-  --sidebar-foreground: #f6f9fc;
-  --sidebar-primary: #7c3aed;
+  --chart-3: #fbbf24;
+  --chart-4: #f87171;
+  --chart-5: #a78bfa;
+  --sidebar: #09090b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #3b82f6;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e3a5f;
-  --sidebar-accent-foreground: #f6f9fc;
-  --sidebar-border: #2d4a6f;
-  --sidebar-ring: #7c3aed;
+  --sidebar-accent: #172554;
+  --sidebar-accent-foreground: #93c5fd;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #3b82f6;
 }
 
 @layer base {
@@ -228,13 +214,4 @@ a {
   transition: all 0.2s ease;
 }
 
-/* Glass effect for navbar */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.dark .glass {
-  background: rgba(10, 22, 40, 0.8);
-}
+/* Removed custom glass effect to follow clean code aesthetic flat design */

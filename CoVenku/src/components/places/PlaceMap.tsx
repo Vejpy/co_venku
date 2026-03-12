@@ -14,7 +14,7 @@ import type {
 import { getPlaceTypeColor } from "@/hooks/usePlaces";
 import type MapLibreGL from "maplibre-gl";
 import type { Feature, Point } from "geojson";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "next-themes";
 
 interface PlaceMapProps {
   geoJson: PlaceFeatureCollection;
@@ -37,7 +37,7 @@ export function PlaceMap({
 }: PlaceMapProps) {
   const mapRef = useRef<MapLibreGL.Map>(null);
   const [popup, setPopup] = useState<PopupState | null>(null);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   // Fly to selected place
   useEffect(() => {
@@ -91,15 +91,15 @@ export function PlaceMap({
         ref={mapRef}
         center={[15.83, 50.21]} // Královéhradecký kraj
         zoom={11}
-        theme={theme}
+        theme={resolvedTheme as "light" | "dark" | undefined}
       >
         <MapClusterLayer<PlaceFeatureProperties>
           data={geoJson}
           clusterMaxZoom={16}
           clusterRadius={60}
-          clusterColors={["#6366f1", "#8b5cf6", "#ec4899"]} // indigo, purple, pink
+          clusterColors={["#71717a", "#52525b", "#a1a1aa"]} // zinc-500, zinc-600, zinc-400
           clusterThresholds={[10, 50]}
-          pointColor="#6366f1" // Indigo barva pro jednotlivé body
+          pointColor="#71717a" // zinc-500 pro jednotlivé body
           onPointClick={handlePointClick}
         />
 
@@ -126,15 +126,15 @@ export function PlaceMap({
                   {popup.place.type}
                 </span>
               </div>
-              <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+              <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                 {popup.place.name}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                 {popup.place.city}, {popup.place.street}{" "}
                 {popup.place.houseNumber}
               </p>
               {popup.place.description && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 line-clamp-2">
                   {popup.place.description}
                 </p>
               )}
@@ -143,7 +143,7 @@ export function PlaceMap({
                   href={popup.place.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 mt-2 font-medium"
+                  className="inline-flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 mt-2 font-medium"
                 >
                   Navštívit web →
                 </a>

@@ -24,7 +24,7 @@ export default function ContactForm() {
         setEmailValid(validateEmail(value));
       }
     },
-    [validateEmail]
+    [validateEmail],
   );
 
   const handleSubmit = useCallback(
@@ -42,16 +42,16 @@ export default function ContactForm() {
       setForm({ name: "", email: "", message: "" });
       setEmailValid(true);
     },
-    [form, validateEmail]
+    [form, validateEmail],
   );
 
   return (
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="space-y-4 bg-white dark:bg-gray-800 shadow-2xl p-6 rounded-xl border border-gray-200 dark:border-gray-700"
+      className="space-y-4 bg-white dark:bg-zinc-800 shadow-2xl p-6 rounded-xl border border-zinc-200 dark:border-zinc-700"
     >
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+      <h2 className="text-2xl font-semibold text-zinc-900 dark:text-white">
         Napište nám
       </h2>
       <input
@@ -59,16 +59,16 @@ export default function ContactForm() {
         name="name"
         placeholder="Vaše jméno"
         onChange={handleChange}
-        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+        className="w-full p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
       />
       <input
         type="email"
         name="email"
         placeholder="Váš email"
         onChange={handleChange}
-        className={`w-full p-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:border-transparent transition-all ${
+        className={`w-full p-3 border rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-2 focus:border-transparent transition-all ${
           emailValid
-            ? "border-gray-300 dark:border-gray-600 focus:ring-primary"
+            ? "border-zinc-300 dark:border-zinc-600 focus:ring-primary"
             : "border-red-500 focus:ring-red-500"
         }`}
       />
@@ -79,9 +79,9 @@ export default function ContactForm() {
         name="message"
         placeholder="Vaše zpráva"
         onChange={handleChange}
-        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all h-32 resize-none"
+        className="w-full p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all h-32 resize-none"
       />
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
         Vyplněná pole: {filledFields} / 3
       </p>
       <button

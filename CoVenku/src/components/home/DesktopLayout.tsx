@@ -22,12 +22,12 @@ export default function DesktopLayout({
 }: Props) {
   return (
     <div className="hidden lg:flex flex-1 overflow-hidden">
-      <aside className="w-105 shrink-0 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 max-h-screen overflow-y-auto transition-colors">
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 transition-colors">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+      <aside className="w-105 shrink-0 border-r border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 max-h-screen overflow-y-auto transition-colors">
+        <div className="sticky top-0 z-10 bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 px-4 py-3 transition-colors">
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
             Kulturní místa
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
             Objevte kulturní místa ve vašem okolí
           </p>
         </div>

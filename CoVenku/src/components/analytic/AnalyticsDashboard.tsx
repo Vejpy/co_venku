@@ -50,20 +50,20 @@ export default function AnalyticsDashboard({
     <>
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-          <p className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm p-6">
+          <p className="text-xs font-bold uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">
             Kulturních míst
           </p>
-          <p className="text-4xl font-semibold text-gray-900 dark:text-white tracking-tight">
+          <p className="text-4xl font-semibold text-zinc-900 dark:text-white tracking-tight">
             {stats.totalPlaces.toLocaleString("cs-CZ")}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-          <p className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm p-6">
+          <p className="text-xs font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400 mb-1">
             Unikátních míst
           </p>
-          <p className="text-4xl font-semibold text-gray-900 dark:text-white tracking-tight">
+          <p className="text-4xl font-semibold text-zinc-900 dark:text-white tracking-tight">
             {stats.uniqueNames.toLocaleString("cs-CZ")}
           </p>
         </div>
@@ -72,8 +72,8 @@ export default function AnalyticsDashboard({
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* By Name */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-          <h2 className="text-sm font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm p-6">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-6">
             Místa podle názvu
           </h2>
 
@@ -81,17 +81,17 @@ export default function AnalyticsDashboard({
             {stats.placesByName.map((item, i) => (
               <div key={i}>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  <span className="text-sm font-medium text-zinc-900 dark:text-white">
                     {item.name}
                   </span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <span className="text-sm font-semibold text-zinc-900 dark:text-white">
                     {item.count}
                   </span>
                 </div>
 
-                <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-indigo-600 dark:bg-indigo-500"
+                    className="h-full rounded-full bg-blue-500 dark:bg-blue-400"
                     style={{ width: `${(item.count / maxNameCount) * 100}%` }}
                   />
                 </div>
@@ -101,8 +101,8 @@ export default function AnalyticsDashboard({
         </div>
 
         {/* Top by Visitors */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-          <h2 className="text-sm font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-6">
+        <div className="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm p-6">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-6">
             Top 10 podle návštěvnosti
           </h2>
 
@@ -110,17 +110,17 @@ export default function AnalyticsDashboard({
             {stats.topByVisitors.map((item, i) => (
               <div key={i}>
                 <div className="flex justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  <span className="text-sm font-medium text-zinc-900 dark:text-white">
                     {item.name}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
                     {item.visitors} míst
                   </span>
                 </div>
 
-                <div className="h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-zinc-100 dark:bg-zinc-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-indigo-600 dark:bg-indigo-500 rounded-full"
+                    className="h-full bg-emerald-500 dark:bg-emerald-400 rounded-full"
                     style={{ width: `${(item.visitors / maxVisitors) * 100}%` }}
                   />
                 </div>

@@ -1,7 +1,7 @@
 export default function ContactInfo() {
   return (
-    <section className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+    <section className="space-y-6 bg-white dark:bg-zinc-800 p-6 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-lg">
+      <h2 className="text-2xl font-semibold text-zinc-900 dark:text-white">
         Naše kancelář
       </h2>
 
@@ -29,8 +29,8 @@ export default function ContactInfo() {
             </svg>
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Adresa</p>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="font-medium text-zinc-900 dark:text-white">Adresa</p>
+            <p className="text-zinc-600 dark:text-zinc-400">
               Hlavní 123, Praha, Česká republika
             </p>
           </div>
@@ -53,7 +53,7 @@ export default function ContactInfo() {
             </svg>
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Email</p>
+            <p className="font-medium text-zinc-900 dark:text-white">Email</p>
             <a
               href="mailto:info@covenku.cz"
               className="text-primary hover:underline"
@@ -80,7 +80,7 @@ export default function ContactInfo() {
             </svg>
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">Telefon</p>
+            <p className="font-medium text-zinc-900 dark:text-white">Telefon</p>
             <a
               href="tel:+420123456789"
               className="text-primary hover:underline"
@@ -107,10 +107,10 @@ export default function ContactInfo() {
             </svg>
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">
+            <p className="font-medium text-zinc-900 dark:text-white">
               Otevírací doba
             </p>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-zinc-600 dark:text-zinc-400">
               Pondělí – Pátek, 9:00–17:00
             </p>
           </div>

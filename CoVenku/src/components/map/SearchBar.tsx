@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { LatLngExpression } from "leaflet";
+import { Search, X } from "lucide-react";
 
 interface MarkerOption {
   id: string | number;
@@ -39,21 +40,38 @@ export default function SearchBar({ markers, onSelect }: SearchBarProps) {
     onSelect(marker.position);
   };
 
+  const clearSearch = () => {
+    setQuery("");
+    setFilteredMarkers([]);
+  };
+
   return (
-    <div className="absolute top-2.5 right-2.5 z-1000 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <input
-        type="text"
-        value={query}
-        onChange={handleChange}
-        placeholder="Hledat místo"
-        className="p-2 w-52 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-      />
+    <div className="absolute top-4 right-4 z-[1000] w-72">
+      <div className="relative flex items-center bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 transition-colors">
+        <Search className="absolute left-3 w-4 h-4 text-zinc-400" />
+        <input
+          type="text"
+          value={query}
+          onChange={handleChange}
+          placeholder="Hledat místo..."
+          className="w-full pl-9 pr-9 py-2.5 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none rounded-xl"
+        />
+        {query && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-2 p-1.5 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+
       {filteredMarkers.length > 0 && (
-        <ul className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 mt-1 p-2 list-none max-h-150px overflow-y-auto rounded">
+        <ul className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg overflow-hidden py-1 max-h-60 overflow-y-auto">
           {filteredMarkers.map((marker) => (
             <li
               key={marker.id}
-              className="py-1 px-2 cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+              className="px-4 py-2.5 text-sm cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
               onClick={() => handleSelect(marker)}
             >
               {marker.title}

@@ -2,8 +2,9 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import HomePageLogo from "@/components/navbar/HomePage";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "sonner";
 import { Metadata } from "next";
 import "@/app/globals.css";
 import "leaflet/dist/leaflet.css";
@@ -88,10 +89,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="cs" suppressHydrationWarning>
-      <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
-        <ThemeProvider>
+      <body className="bg-background text-foreground min-h-screen">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <Navbar />
+            <Toaster position="top-center" richColors closeButton />
 
             <main className="px-6 sm:px-12 py-8">
               <SpeedInsights />

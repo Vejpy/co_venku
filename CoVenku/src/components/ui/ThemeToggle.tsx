@@ -1,20 +1,32 @@
 "use client";
 
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div className="w-9 h-9" />; // Placeholder to avoid hydration mismatch
+  }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={toggleTheme}
-      className="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-      aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="relative p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {/* Sun icon */}
       <svg
         className={`w-5 h-5 text-amber-500 transition-all ${
-          theme === "light" ? "opacity-100 rotate-0" : "opacity-0 rotate-90"
+          !isDark ? "opacity-100 rotate-0" : "opacity-0 rotate-90"
         } absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
         fill="none"
         stroke="currentColor"
@@ -29,8 +41,8 @@ export default function ThemeToggle() {
       </svg>
       {/* Moon icon */}
       <svg
-        className={`w-5 h-5 text-indigo-400 transition-all ${
-          theme === "dark" ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
+        className={`w-5 h-5 text-zinc-300 transition-all ${
+          isDark ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
         }`}
         fill="none"
         stroke="currentColor"

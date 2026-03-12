@@ -58,13 +58,13 @@ import ContactInfo from "@/components/contact/ContactInfo";
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 transition-colors">
+    <main className="min-h-screen  pt-20 transition-colors">
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
             Kontaktujte nás
           </h1>
-          <h2 className="text-base font-normal text-gray-500 dark:text-gray-400 mt-2">
+          <h2 className="text-base font-normal text-zinc-500 dark:text-zinc-400 mt-2">
             Máte dotaz nebo nápad? Rádi vám odpovíme.
           </h2>
         </div>

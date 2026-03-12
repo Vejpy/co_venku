@@ -30,20 +30,20 @@ const PlacesNav: React.FC<PlacesNavProps> = ({
 
   return (
     <nav
-      className={`fixed inset-0 z-50 bg-white dark:bg-gray-900 shadow-lg flex flex-col transform transition-transform h-full max-h-screen overflow-y-auto duration-300 ease-in-out md:relative md:inset-auto md:w-72 md:translate-x-0 ${
+      className={`fixed inset-0 z-50 bg-white dark:bg-zinc-900 shadow-lg flex flex-col transform transition-transform h-full max-h-screen overflow-y-auto duration-300 ease-in-out md:relative md:inset-auto md:w-72 md:translate-x-0 ${
         isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
       }`}
       aria-hidden={!isOpen}
     >
-      <div className="border-b border-gray-200 dark:border-gray-700 p-4 flex items-center bg-white dark:bg-gray-900 z-10 mt-20 md:mt-16">
+      <div className="border-b border-zinc-200 dark:border-zinc-700 p-4 flex items-center bg-white dark:bg-zinc-900 z-10 mt-20 md:mt-16">
         <button
           onClick={onClose}
           aria-label="Zavřít navigaci"
-          className="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-primary rounded text-2xl"
+          className="mr-4 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-primary rounded text-2xl"
         >
           {"<"}
         </button>
-        <h1 className="text-xl font-bold w-full text-center text-gray-900 dark:text-white">
+        <h1 className="text-xl font-bold w-full text-center text-zinc-900 dark:text-white">
           Detail místa
         </h1>
       </div>
@@ -57,7 +57,7 @@ const PlacesNav: React.FC<PlacesNavProps> = ({
               description={place.description}
             />
           ) : (
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-zinc-500 dark:text-zinc-400">
               Žádné místo nevybráno.
             </p>
           )}

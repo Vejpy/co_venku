@@ -10,18 +10,18 @@ export default function AnalyticsClientWrapper() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-8">
-        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+        <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-32" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
             <div
               key={i}
-              className="h-28 bg-gray-200 dark:bg-gray-700 rounded-lg"
+              className="h-28 bg-zinc-200 dark:bg-zinc-700 rounded-lg"
             />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-          <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+          <div className="h-96 bg-zinc-200 dark:bg-zinc-700 rounded-lg" />
+          <div className="h-96 bg-zinc-200 dark:bg-zinc-700 rounded-lg" />
         </div>
       </div>
     );

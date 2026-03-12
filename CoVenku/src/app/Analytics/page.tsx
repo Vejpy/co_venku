@@ -55,13 +55,13 @@ export const metadata: Metadata = {
 
 export default function AnalyticsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 transition-colors">
+    <div className="min-h-screen pt-20 transition-colors">
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white tracking-tight">
             Analytika
           </h1>
-          <h2 className="text-sm font-normal text-gray-500 dark:text-gray-400 mt-1">
+          <h2 className="text-sm font-normal text-zinc-500 dark:text-zinc-400 mt-1">
             Přehled kulturních míst v databázi
           </h2>
         </div>

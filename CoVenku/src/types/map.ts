@@ -20,6 +20,7 @@ export interface CulturePlace {
   address: Address;
   type: string;
   else?: string;
+  organizationId: number;
 }
 
 export interface CulturePlaceResponse {
@@ -37,4 +38,8 @@ export interface MarkerData {
   type: string;
   number: number;
   position: [number, number];
+  address?: string;
+  website?: string;
+  webUrl?: string;
+  organizationName?: string | null;
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import SearchBar from "./SearchBar";
 import { MarkerData } from "../../types/map";
 import { fetchMarkers } from "../../utils/mapData";
 import dynamic from "next/dynamic";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "next-themes";
 import {
   Map,
   MapClusterLayer,
@@ -13,20 +13,10 @@ import {
   MapPopup,
 } from "../../components/ui/map";
 
-interface CulturePlace {
-  name?: string;
-  description?: string;
-  website?: string;
-  webUrl?: string;
-  type?: string;
-  address?: string;
-  position: [number, number];
-}
-
 interface MapContainerProps {
   markersData?: MarkerData[];
-  places?: CulturePlace[];
   selectedPlaceId?: number | null;
+  renderPopup?: (marker: MarkerData) => React.ReactNode;
 }
 
 const DEFAULT_CENTER: [number, number] = [15.8326259, 50.2094261];
@@ -35,64 +25,73 @@ function MapControlsExample() {
   return <MapControls />;
 }
 
-function MapContainer({ markersData, places, selectedPlaceId }: MapContainerProps) {
-  const [markersDataState, setMarkersDataState] = useState<MarkerData[]>([]);
-  const [geoJsonData, setGeoJsonData] = useState<GeoJSON.FeatureCollection<
-    GeoJSON.Point,
-    MarkerData
-  > | null>(null);
-  const [selectedMarker, setSelectedMarker] = useState<CulturePlace | null>(
-    null,
-  );
-  const { theme } = useTheme();
+function MapContainer({ markersData, selectedPlaceId, renderPopup }: MapContainerProps) {
+  // Internal fallback markers — only used when markersData prop is NOT provided
+  const [internalMarkers, setInternalMarkers] = useState<MarkerData[]>([]);
+  const [internalLoaded, setInternalLoaded] = useState(false);
+
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+  const { resolvedTheme } = useTheme();
   const [center, setCenter] = useState<[number, number]>(DEFAULT_CENTER);
   const [zoom, setZoom] = useState<number>(13);
+
+  // Decide which markers to show: external prop wins over internal fetch
+  const activeMarkers = markersData ?? internalMarkers;
+
+  // Fly to selected place
   useEffect(() => {
-    if (!selectedPlaceId || !markersDataState) return;
-    const marker = markersDataState.find((m) => m.id === selectedPlaceId);
+    if (!selectedPlaceId) return;
+    const marker = activeMarkers.find((m) => m.id === selectedPlaceId);
     if (!marker || !Array.isArray(marker.position)) return;
     const [lat, lng] = marker.position;
-    setCenter([lng, lat]); // map expects [lng, lat]
+    setCenter([lng, lat]);
     setZoom(16);
-  }, [selectedPlaceId, markersDataState]);
+  }, [selectedPlaceId, activeMarkers]);
 
+  // Close popup when external markers change (filter switch)
   useEffect(() => {
+    setSelectedMarker(null);
+  }, [markersData]);
+
+  // Load internal markers only when no external data supplied
+  useEffect(() => {
+    if (markersData !== undefined) return; // external data — skip internal fetch
+    if (internalLoaded) return;
     async function loadMarkers() {
       try {
         const data = await fetchMarkers();
-        console.log("Loaded markers:", data);
-        setMarkersDataState(data);
-
-        // Transform to GeoJSON
-        const features = data.map((marker) => ({
-          type: "Feature" as const,
-          geometry: {
-            type: "Point" as const,
-            coordinates: Array.isArray(marker.position)
-              ? [marker.position[1], marker.position[0]]
-              : [0, 0],
-          },
-          properties: marker,
-        }));
-
-        const featureCollection: GeoJSON.FeatureCollection<
-          GeoJSON.Point,
-          MarkerData
-        > = {
-          type: "FeatureCollection",
-          features,
-        };
-
-        console.log("GeoJSON data:", featureCollection);
-        setGeoJsonData(featureCollection);
+        setInternalMarkers(data);
       } catch (err) {
         console.error("Failed to fetch markers:", err);
+      } finally {
+        setInternalLoaded(true);
       }
     }
     loadMarkers();
-  }, []);
+  }, [markersData, internalLoaded]);
 
-  if (!geoJsonData) {
+  // Build GeoJSON from active markers — always emit a valid FeatureCollection
+  const geoJsonData = useMemo(
+    (): GeoJSON.FeatureCollection<GeoJSON.Point, MarkerData> => ({
+      type: "FeatureCollection" as const,
+      features: activeMarkers.map((marker) => ({
+        type: "Feature" as const,
+        geometry: {
+          type: "Point" as const,
+          coordinates: Array.isArray(marker.position)
+            ? [marker.position[1], marker.position[0]]
+            : [0, 0],
+        },
+        properties: marker,
+      })),
+    }),
+    [activeMarkers]
+  );
+
+  // Show loading ONLY when we're waiting for internal fetch (no external markersData)
+  const isLoading = markersData === undefined && !internalLoaded;
+
+  if (isLoading) {
     return (
       <div
         style={{
@@ -104,7 +103,7 @@ function MapContainer({ markersData, places, selectedPlaceId }: MapContainerProp
           justifyContent: "center",
         }}
       >
-        <div>Loading map...</div>
+        <div>Načítám mapu...</div>
       </div>
     );
   }
@@ -120,18 +119,21 @@ function MapContainer({ markersData, places, selectedPlaceId }: MapContainerProp
           width: "calc(100% - 24px)",
         }}
       >
-        <SearchBar markers={markersDataState} onSelect={() => {}} />
+        <SearchBar markers={activeMarkers} onSelect={() => {}} />
       </div>
-      <Map center={center} zoom={zoom} theme={theme}>
+      <Map center={center} zoom={zoom} theme={resolvedTheme as "light" | "dark" | undefined}>
         <MapClusterLayer
           data={geoJsonData}
+          resolvedTheme={resolvedTheme || "light"}
+          clusterColors={["#3b82f6", "#8b5cf6", "#ec4899"]}
           onPointClick={(feature) => {
             if (feature && feature.properties && feature.geometry.coordinates) {
               const [lng, lat] = feature.geometry.coordinates;
-              setSelectedMarker({
-                ...feature.properties,
-                position: [lat, lng],
-              });
+              const clicked = feature.properties as MarkerData;
+              // If same marker clicked again, deselect (allows re-selecting)
+              setSelectedMarker((prev) =>
+                prev?.id === clicked.id ? null : { ...clicked, position: [lat, lng] }
+              );
             }
           }}
         />
@@ -142,70 +144,63 @@ function MapContainer({ markersData, places, selectedPlaceId }: MapContainerProp
             closeButton={true}
             onClose={() => setSelectedMarker(null)}
           >
-            <div style={{ maxWidth: 300, fontFamily: "Arial, sans-serif" }}>
-              <h3
-                style={{
-                  margin: "0 0 6px 0",
-                  fontSize: "1.2em",
-                  color: theme === "dark" ? "#fff" : "#000",
-                }}
-              >
-                {selectedMarker.name}
-              </h3>
-              {selectedMarker.description && (
-                <p
+            {renderPopup ? (
+              renderPopup(selectedMarker)
+            ) : (
+              <div style={{ maxWidth: 300, fontFamily: "Arial, sans-serif" }}>
+                <h3
                   style={{
                     margin: "0 0 6px 0",
-                    fontSize: "0.9em",
-                    color: theme === "dark" ? "#ccc" : "#333",
+                    fontSize: "1.2em",
+                    color: resolvedTheme === "dark" ? "#fff" : "#000",
                   }}
                 >
-                  {selectedMarker.description}
-                </p>
-              )}
-              {selectedMarker.type && (
-                <p
-                  style={{
-                    margin: "0 0 4px 0",
-                    fontSize: "0.85em",
-                    fontWeight: "bold",
-                    color: theme === "dark" ? "#aaa" : "#555",
-                  }}
-                >
-                  Type: {selectedMarker.type}
-                </p>
-              )}
-              {selectedMarker.address && (
-                <p
-                  style={{
-                    margin: "0 0 6px 0",
-                    fontSize: "0.9em",
-                    color: theme === "dark" ? "#ccc" : "#333",
-                  }}
-                >
-                  Address: {selectedMarker.address}
-                </p>
-              )}
-              {(selectedMarker.website || selectedMarker.webUrl) && (
-                <a
-                  href={selectedMarker.website ?? selectedMarker.webUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    marginTop: 8,
-                    backgroundColor: "#28a745",
-                    color: "#fff",
-                    padding: "6px 8px",
-                    borderRadius: 4,
-                    textDecoration: "none",
-                    fontSize: "0.9em",
-                  }}
-                >
-                  More Info
-                </a>
-              )}
-            </div>
+                  {selectedMarker.name}
+                </h3>
+                {selectedMarker.description && (
+                  <p
+                    style={{
+                      margin: "0 0 6px 0",
+                      fontSize: "0.9em",
+                      color: resolvedTheme === "dark" ? "#ccc" : "#333",
+                    }}
+                  >
+                    {selectedMarker.description}
+                  </p>
+                )}
+                {selectedMarker.type && (
+                  <p
+                    style={{
+                      margin: "0 0 4px 0",
+                      fontSize: "0.85em",
+                      fontWeight: "bold",
+                      color: resolvedTheme === "dark" ? "#aaa" : "#555",
+                    }}
+                  >
+                    {selectedMarker.type}
+                  </p>
+                )}
+                {(selectedMarker.website || selectedMarker.webUrl) && (
+                  <a
+                    href={selectedMarker.website ?? selectedMarker.webUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-block",
+                      marginTop: 8,
+                      backgroundColor: "#28a745",
+                      color: "#fff",
+                      padding: "6px 8px",
+                      borderRadius: 4,
+                      textDecoration: "none",
+                      fontSize: "0.9em",
+                    }}
+                  >
+                    Více info
+                  </a>
+                )}
+              </div>
+            )}
           </MapPopup>
         )}
         <MapControlsExample />
